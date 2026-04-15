@@ -1,0 +1,34 @@
+name: Monthly AAP Digest
+
+on:
+  # First Monday of every month at 08:00 Paris time (07:00 UTC)
+  # GitHub Actions doesn't natively support "first Monday", so we run every Monday
+  # and let the workflow check the date. See the "check-date" step.
+  schedule:
+    - cron: '0 7 * * 1'
+  # Allow manual trigger from GitHub Actions UI
+  workflow_dispatch:
+
+jobs:
+  send-digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if first Monday of month
+        id: check-date
+        run: |
+          DAY=$(date +%d)
+          if [ "$DAY" -le 7 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "send=true" >> $GITHUB_OUTPUT
+          else
+            echo "send=false" >> $GITHUB_OUTPUT
+            echo "Not the first Monday of the month (day=$DAY), skipping."
+          fi
+
+      - name: Send monthly digest
+        if: steps.check-date.outputs.send == 'true'
+        run: |
+          curl -f -X POST "${{ secrets.APP_URL }}/api/notify" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}

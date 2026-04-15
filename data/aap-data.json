@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "lastUpdated": "2026-04-15",
+    "updatedBy": "Samuel"
+  },
+  "guichets": [
+    {
+      "id": "bpi-dm-implantable",
+      "nom": "AAP DM implantable & robotique chirurgicale",
+      "organisme": "Bpifrance / France 2030",
+      "niveau": "FR",
+      "type": "subvention",
+      "trl": "7-9",
+      "scope": "DM implantables, robotique, image guidance, bloc opératoire",
+      "cibles": ["PME", "ETI", "Consortia"],
+      "budget_projet": "≥ 1 M€",
+      "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours",
+      "deadlines": [
+        {
+          "label": "Vague 2026 — à confirmer",
+          "date": null,
+          "statut": "a_surveiller",
+          "notes": "Logique vagues périodiques — vérifier page BPI AAP"
+        }
+      ],
+      "tags": ["DM", "robotique", "implantable", "France 2030"]
+    },
+    {
+      "id": "bpi-tiers-lieux",
+      "nom": "Grands Défis — Tiers lieux d'expérimentation MedTech",
+      "organisme": "Bpifrance / France 2030",
+      "niveau": "FR",
+      "type": "subvention + avance remboursable",
+      "trl": "6-9",
+      "scope": "Robotique chirurgicale, DM implantables — expérimentation en conditions réelles",
+      "cibles": ["Établissements de santé (chef de file)", "PME", "ETI"],
+      "budget_projet": "≥ 1 M€ (typiquement 2-3 M€)",
+      "url": "https://www.bpifrance.fr/nos-appels-a-projets-grands-defis-tiers-lieux-dexperimentation-medtech",
+      "deadlines": [
+        {
+          "label": "Vague 2026 (fermée)",
+          "date": "2026-03-17",
+          "statut": "ferme",
+          "notes": "Clôture passée — surveiller prochaine vague sur page BPI"
+        }
+      ],
+      "tags": ["tiers-lieux", "robotique", "DM", "France 2030", "consortium"]
+    },
+    {
+      "id": "bpi-industrialisation-sante",
+      "nom": "AAP Industrialisation & Capacités Santé 2030",
+      "organisme": "Bpifrance",
+      "niveau": "FR",
+      "type": "subvention",
+      "trl": "7-9",
+      "scope": "Scale-up industriel : DM, produits de santé, lignes de production, relocalisation",
+      "cibles": ["PME", "ETI", "GE (sous conditions AFR)"],
+      "budget_projet": "variable",
+      "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-industrialisation-et-capacites-sante-2030",
+      "deadlines": [
+        {
+          "label": "Guichet à relèves régulières",
+          "date": null,
+          "statut": "ouvert_continu",
+          "notes": "Dépôt à tout moment, instruit à la date de relève suivante"
+        }
+      ],
+      "tags": ["industrialisation", "DM", "scale-up", "France 2030"]
+    },
+    {
+      "id": "bpi-eval-medico-eco",
+      "nom": "AAP Évaluation bénéfice médico-économique des DMN",
+      "organisme": "Bpifrance / ANS",
+      "niveau": "FR",
+      "type": "subvention",
+      "trl": "8-9",
+      "scope": "Évaluations cliniques post-CE : DM numériques (IA incluse) et DM d'équipement innovants",
+      "cibles": ["Entreprises", "Établissements de santé"],
+      "budget_projet": "variable",
+      "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-evaluation-du-benefice-medico-economique-des-dispositifs-medicaux-numeriques-et-des-dispositifs-medicaux-dequipement",
+      "deadlines": [
+        {
+          "label": "Guichet ouvert en continu",
+          "date": null,
+          "statut": "ouvert_continu",
+          "notes": "Dépôt sur plateforme PICXEL — pas de deadline fixe"
+        }
+      ],
+      "tags": ["DMN", "évaluation", "médico-économique", "IA", "post-CE"]
+    },
+    {
+      "id": "dgos-phrc",
+      "nom": "PHRC-N / PHRIP / PREPS / PRME",
+      "organisme": "DGOS / Ministère de la Santé",
+      "niveau": "FR",
+      "type": "subvention recherche clinique",
+      "trl": "5-8",
+      "scope": "Validation clinique de DM/MedTech en cardio, neuro, onco — projets hospitaliers multicentriques",
+      "cibles": ["CHU", "CH", "ESPIC", "Chercheurs hospitaliers"],
+      "budget_projet": "100 K€ – 2 M€ selon programme",
+      "url": "https://sante.gouv.fr/professionnels/recherche-et-innovation/l-innovation-et-la-recherche-clinique/appels-a-projets/programmes-recherche",
+      "deadlines": [
+        {
+          "label": "Campagne 2026-2027 — lettres d'intention",
+          "date": "2025-12-09",
+          "statut": "ferme",
+          "notes": "Lettres d'intention déposées fin 2025 — dépôt complet en cours, calendrier sur INNOVARC et sites GIRCI"
+        }
+      ],
+      "tags": ["recherche clinique", "cardio", "onco", "neuro", "DM", "validation"]
+    },
+    {
+      "id": "eic-accelerator",
+      "nom": "EIC Accelerator",
+      "organisme": "Commission européenne / EIC",
+      "niveau": "EU",
+      "type": "grant + equity",
+      "trl": "6-9",
+      "scope": "Deep-tech à fort impact, scaling PME et startups — MedTech éligible sur volet Open",
+      "cibles": ["PME", "Startups", "Small mid-caps (< 499 ETP)"],
+      "budget_projet": "jusqu'à 2,5 M€ grant + 1-10 M€ equity",
+      "url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-accelerator_en",
+      "deadlines": [
+        {
+          "label": "Step 1 (short proposal)",
+          "date": null,
+          "statut": "ouvert_continu",
+          "notes": "Ouvert en continu, traitement sous 4-6 semaines"
+        },
+        {
+          "label": "Step 2 — Batch 3",
+          "date": "2026-05-06",
+          "statut": "ouvert"
+        },
+        {
+          "label": "Step 2 — Batch 4",
+          "date": "2026-07-08",
+          "statut": "ouvert"
+        },
+        {
+          "label": "Step 2 — Batch 5",
+          "date": "2026-09-02",
+          "statut": "ouvert"
+        },
+        {
+          "label": "Step 2 — Batch 6",
+          "date": "2026-11-04",
+          "statut": "ouvert"
+        }
+      ],
+      "tags": ["EIC", "deep-tech", "MedTech", "PME", "equity", "EU"]
+    },
+    {
+      "id": "eic-pathfinder",
+      "nom": "EIC Pathfinder",
+      "organisme": "Commission européenne / EIC",
+      "niveau": "EU",
+      "type": "grant recherche",
+      "trl": "1-4",
+      "scope": "Recherche amont, technologies de rupture — MedTech très amont (ex. diagnostics, biocapteurs)",
+      "cibles": ["PME", "Organismes de recherche", "Consortia"],
+      "budget_projet": "jusqu'à 4 M€",
+      "url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-pathfinder_en",
+      "deadlines": [
+        {
+          "label": "Pathfinder Open 2026",
+          "date": "2026-05-12",
+          "statut": "ouvert"
+        },
+        {
+          "label": "Pathfinder Challenges 2026",
+          "date": "2026-10-28",
+          "statut": "ouvert"
+        }
+      ],
+      "tags": ["EIC", "recherche amont", "rupture", "TRL bas", "EU"]
+    },
+    {
+      "id": "eic-transition",
+      "nom": "EIC Transition",
+      "organisme": "Commission européenne / EIC",
+      "niveau": "EU",
+      "type": "grant",
+      "trl": "3-6",
+      "scope": "Transfert technologique TRL 3-4 → 5-6, pour projets issus de Pathfinder/ERC PoC/RIA",
+      "cibles": ["PME", "Petits consortia (2-5 partenaires)"],
+      "budget_projet": "jusqu'à 2,5 M€",
+      "url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-transition_en",
+      "deadlines": [
+        {
+          "label": "EIC Transition 2026",
+          "date": "2026-09-16",
+          "statut": "ouvert"
+        }
+      ],
+      "tags": ["EIC", "transfert techno", "TRL intermédiaire", "EU"]
+    },
+    {
+      "id": "horizon-hlth-2026",
+      "nom": "Horizon Europe Cluster 1 — Santé (HLTH-2026)",
+      "organisme": "Commission européenne / HaDEA",
+      "niveau": "EU",
+      "type": "grant collaboratif",
+      "trl": "4-7",
+      "scope": "NAMs pour DM, scaling cardiovasculaire, IA biomarqueurs, Virtual Human Twins, oncologie",
+      "cibles": ["Consortia (min. 3 entités, 3 pays EU)"],
+      "budget_projet": "2-15 M€ selon topic",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/programmes/horizon",
+      "deadlines": [
+        {
+          "label": "Lot 1 — topics cardio / NAMs / DM",
+          "date": "2026-04-16",
+          "statut": "ferme",
+          "notes": "Deadline passée — lot principal en septembre-octobre"
+        },
+        {
+          "label": "Lot principal 2026",
+          "date": "2026-09-15",
+          "statut": "ouvert",
+          "notes": "Date indicative — vérifier sur Funding & Tenders Portal"
+        }
+      ],
+      "tags": ["Horizon Europe", "consortium", "DM", "cardio", "IA", "EU"]
+    },
+    {
+      "id": "eit-health",
+      "nom": "EIT Health — Programmes annuels",
+      "organisme": "EIT Health / Commission européenne",
+      "niveau": "EU",
+      "type": "subvention + accompagnement",
+      "trl": "5-9",
+      "scope": "Validation clinique, adoption hospitalière, go-to-market — projets collaboratifs hôpitaux + industriels",
+      "cibles": ["Hôpitaux", "PME MedTech", "Startups"],
+      "budget_projet": "50 K€ – 500 K€ selon programme",
+      "url": "https://eithealth.eu/programmes/",
+      "deadlines": [
+        {
+          "label": "Appels 2026 en cours d'ouverture",
+          "date": null,
+          "statut": "a_surveiller",
+          "notes": "Programmes annuels — vérifier eithealth.eu/programmes/"
+        }
+      ],
+      "tags": ["EIT Health", "adoption clinique", "validation", "EU"]
+    }
+  ]
+}
