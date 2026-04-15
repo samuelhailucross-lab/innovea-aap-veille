@@ -109,7 +109,7 @@ export async function sendMonthlyDigest(
 </html>`
 
   await resend.emails.send({
-    from: 'INNOVÉA AAP Veille <noreply@yourdomain.com>',
+    from: 'INNOVÉA AAP Veille <onboarding@resend.dev>',
     to: recipients,
     subject: `[AAP MedTech] Digest mensuel — ${format(new Date(), 'MMMM yyyy', { locale: fr })}`,
     html,
