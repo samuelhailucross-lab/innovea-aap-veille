@@ -110,37 +110,37 @@
       "tags": ["recherche clinique", "cardio", "onco", "neuro", "DM", "validation"]
     },
     {
-  "id": "anap-achats-innovants-2026",
-  "nom": "AAP Achats publics innovants — Établissements de santé",
-  "organisme": "ANAP / AIS / DGOS — France 2030",
-  "niveau": "FR",
-  "type": "subvention",
-  "trl": "9",
-  "scope": "Déploiement opérationnel de solutions innovantes matures déjà disponibles sur le marché dans les établissements sanitaires et médico-sociaux. Évaluation médico-économique obligatoire. Budget min. 150 000 €, durée 12–24 mois. 3 vagues prévues sur 3 ans.",
-  "cibles": ["Établissements de santé", "ESSMS", "Groupements d'établissements"],
-  "budget_projet": "≥ 150 000 €",
-  "url": "https://www.anap.fr/s/article/appel-a-projets-achats-innovants",
-  "deadlines": [
-    {
-      "label": "Vague 1",
-      "date": "2026-06-30",
-      "statut": "ouvert",
-      "notes": "Porteur obligatoire = établissement sanitaire ou médico-social. 5 domaines : diagnostic & clinique, bloc opératoire, parcours patient, RH/supports, transition écologique. Subvention directe France 2030 via ANAP."
-    },
-    {
-      "label": "Vague 2",
-      "date": null,
-      "statut": "a_surveiller",
-      "notes": "Date non encore publiée — prévu 2027."
-    },
-    {
-      "label": "Vague 3",
-      "date": null,
-      "statut": "a_surveiller",
-      "notes": "Date non encore publiée — prévu 2028."
-    }
-  ],
-  "tags": ["DM", "diagnostic", "parcours patient", "France 2030", "commande publique"]
+     "id": "anap-achats-innovants-2026",
+     "nom": "AAP Achats publics innovants — Établissements de santé",
+     "organisme": "ANAP / AIS / DGOS — France 2030",
+     "niveau": "FR",
+     "type": "subvention",
+     "trl": "9",
+     "scope": "Déploiement opérationnel de solutions innovantes matures déjà disponibles sur le marché dans les établissements sanitaires et médico-sociaux. Évaluation médico-économique obligatoire. Budget min. 150 000 €, durée 12–24 mois. 3 vagues prévues sur 3 ans.",
+     "cibles": ["Établissements de santé", "ESSMS", "Groupements d'établissements"],
+     "budget_projet": "≥ 150 000 €",
+     "url": "https://www.anap.fr/s/article/appel-a-projets-achats-innovants",
+     "deadlines": [
+       {
+         "label": "Vague 1",
+         "date": "2026-06-30",
+         "statut": "ouvert",
+         "notes": "Porteur obligatoire = établissement sanitaire ou médico-social. 5 domaines : diagnostic & clinique, bloc opératoire, parcours patient, RH/supports, transition écologique. Subvention directe France 2030 via ANAP."
+       },
+       {
+         "label": "Vague 2",
+         "date": null,
+         "statut": "a_surveiller",
+         "notes": "Date non encore publiée — prévu 2027."
+       },
+      {
+         "label": "Vague 3",
+         "date": null,
+         "statut": "a_surveiller",
+         "notes": "Date non encore publiée — prévu 2028."
+       }
+     ],
+     "tags": ["DM", "diagnostic", "parcours patient", "France 2030", "commande publique"]
 	}	
     
     {
