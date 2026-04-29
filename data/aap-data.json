@@ -12,7 +12,11 @@
       "type": "subvention",
       "trl": "7-9",
       "scope": "DM implantables, robotique, image guidance, bloc opératoire",
-      "cibles": ["PME", "ETI", "Consortia"],
+      "cibles": [
+        "PME",
+        "ETI",
+        "Consortia"
+      ],
       "budget_projet": "≥ 1 M€",
       "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours",
       "deadlines": [
@@ -23,7 +27,12 @@
           "notes": "Logique vagues périodiques — vérifier page BPI AAP"
         }
       ],
-      "tags": ["DM", "robotique", "implantable", "France 2030"]
+      "tags": [
+        "DM",
+        "robotique",
+        "implantable",
+        "France 2030"
+      ]
     },
     {
       "id": "bpi-tiers-lieux",
@@ -33,7 +42,11 @@
       "type": "subvention + avance remboursable",
       "trl": "6-9",
       "scope": "Robotique chirurgicale, DM implantables — expérimentation en conditions réelles",
-      "cibles": ["Établissements de santé (chef de file)", "PME", "ETI"],
+      "cibles": [
+        "Établissements de santé (chef de file)",
+        "PME",
+        "ETI"
+      ],
       "budget_projet": "≥ 1 M€ (typiquement 2-3 M€)",
       "url": "https://www.bpifrance.fr/nos-appels-a-projets-grands-defis-tiers-lieux-dexperimentation-medtech",
       "deadlines": [
@@ -44,7 +57,13 @@
           "notes": "Clôture passée — surveiller prochaine vague sur page BPI"
         }
       ],
-      "tags": ["tiers-lieux", "robotique", "DM", "France 2030", "consortium"]
+      "tags": [
+        "tiers-lieux",
+        "robotique",
+        "DM",
+        "France 2030",
+        "consortium"
+      ]
     },
     {
       "id": "bpi-industrialisation-sante",
@@ -54,7 +73,11 @@
       "type": "subvention",
       "trl": "7-9",
       "scope": "Scale-up industriel : DM, produits de santé, lignes de production, relocalisation",
-      "cibles": ["PME", "ETI", "GE (sous conditions AFR)"],
+      "cibles": [
+        "PME",
+        "ETI",
+        "GE (sous conditions AFR)"
+      ],
       "budget_projet": "variable",
       "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-industrialisation-et-capacites-sante-2030",
       "deadlines": [
@@ -65,7 +88,12 @@
           "notes": "Dépôt à tout moment, instruit à la date de relève suivante"
         }
       ],
-      "tags": ["industrialisation", "DM", "scale-up", "France 2030"]
+      "tags": [
+        "industrialisation",
+        "DM",
+        "scale-up",
+        "France 2030"
+      ]
     },
     {
       "id": "bpi-eval-medico-eco",
@@ -75,7 +103,10 @@
       "type": "subvention",
       "trl": "8-9",
       "scope": "Évaluations cliniques post-CE : DM numériques (IA incluse) et DM d'équipement innovants",
-      "cibles": ["Entreprises", "Établissements de santé"],
+      "cibles": [
+        "Entreprises",
+        "Établissements de santé"
+      ],
       "budget_projet": "variable",
       "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-evaluation-du-benefice-medico-economique-des-dispositifs-medicaux-numeriques-et-des-dispositifs-medicaux-dequipement",
       "deadlines": [
@@ -86,7 +117,13 @@
           "notes": "Dépôt sur plateforme PICXEL — pas de deadline fixe"
         }
       ],
-      "tags": ["DMN", "évaluation", "médico-économique", "IA", "post-CE"]
+      "tags": [
+        "DMN",
+        "évaluation",
+        "médico-économique",
+        "IA",
+        "post-CE"
+      ]
     },
     {
       "id": "dgos-phrc",
@@ -96,7 +133,12 @@
       "type": "subvention recherche clinique",
       "trl": "5-8",
       "scope": "Validation clinique de DM/MedTech en cardio, neuro, onco — projets hospitaliers multicentriques",
-      "cibles": ["CHU", "CH", "ESPIC", "Chercheurs hospitaliers"],
+      "cibles": [
+        "CHU",
+        "CH",
+        "ESPIC",
+        "Chercheurs hospitaliers"
+      ],
       "budget_projet": "100 K€ – 2 M€ selon programme",
       "url": "https://sante.gouv.fr/professionnels/recherche-et-innovation/l-innovation-et-la-recherche-clinique/appels-a-projets/programmes-recherche",
       "deadlines": [
@@ -107,42 +149,58 @@
           "notes": "Lettres d'intention déposées fin 2025 — dépôt complet en cours, calendrier sur INNOVARC et sites GIRCI"
         }
       ],
-      "tags": ["recherche clinique", "cardio", "onco", "neuro", "DM", "validation"]
+      "tags": [
+        "recherche clinique",
+        "cardio",
+        "onco",
+        "neuro",
+        "DM",
+        "validation"
+      ]
     },
     {
-     "id": "anap-achats-innovants-2026",
-     "nom": "AAP Achats publics innovants — Établissements de santé",
-     "organisme": "ANAP / AIS / DGOS — France 2030",
-     "niveau": "FR",
-     "type": "subvention",
-     "trl": "9",
-     "scope": "Déploiement opérationnel de solutions innovantes matures déjà disponibles sur le marché dans les établissements sanitaires et médico-sociaux. Évaluation médico-économique obligatoire. Budget min. 150 000 €, durée 12–24 mois. 3 vagues prévues sur 3 ans.",
-     "cibles": ["Établissements de santé", "ESSMS", "Groupements d'établissements"],
-     "budget_projet": "≥ 150 000 €",
-     "url": "https://www.anap.fr/s/article/appel-a-projets-achats-innovants",
-     "deadlines": [
-       {
-         "label": "Vague 1",
-         "date": "2026-06-30",
-         "statut": "ouvert",
-         "notes": "Porteur obligatoire = établissement sanitaire ou médico-social. 5 domaines : diagnostic & clinique, bloc opératoire, parcours patient, RH/supports, transition écologique. Subvention directe France 2030 via ANAP."
-       },
-       {
-         "label": "Vague 2",
-         "date": null,
-         "statut": "a_surveiller",
-         "notes": "Date non encore publiée — prévu 2027."
-       },
-      {
-         "label": "Vague 3",
-         "date": null,
-         "statut": "a_surveiller",
-         "notes": "Date non encore publiée — prévu 2028."
-       }
-     ],
-     "tags": ["DM", "diagnostic", "parcours patient", "France 2030", "commande publique"]
-	},	
-    
+      "id": "anap-achats-innovants-2026",
+      "nom": "AAP Achats publics innovants — Établissements de santé",
+      "organisme": "ANAP / AIS / DGOS — France 2030",
+      "niveau": "FR",
+      "type": "subvention",
+      "trl": "9",
+      "scope": "Déploiement opérationnel de solutions innovantes matures déjà disponibles sur le marché dans les établissements sanitaires et médico-sociaux. Évaluation médico-économique obligatoire. Budget min. 150 000 €, durée 12–24 mois. 3 vagues prévues sur 3 ans.",
+      "cibles": [
+        "Établissements de santé",
+        "ESSMS",
+        "Groupements d'établissements"
+      ],
+      "budget_projet": "≥ 150 000 €",
+      "url": "https://www.anap.fr/s/article/appel-a-projets-achats-innovants",
+      "deadlines": [
+        {
+          "label": "Vague 1",
+          "date": "2026-09-30",
+          "statut": "ouvert",
+          "notes": "Porteur obligatoire = établissement sanitaire ou médico-social. Budget min. 150 000 €, durée 12–24 mois. 5 domaines : diagnostic & clinique, bloc opératoire, parcours patient, RH/supports, transition écologique. Subvention directe ≤ 50% dépenses éligibles. Dépôt sur demarche.numerique.gouv.fr"
+        },
+        {
+          "label": "Vague 2",
+          "date": null,
+          "statut": "a_surveiller",
+          "notes": "Date non encore publiée — prévu 2027."
+        },
+        {
+          "label": "Vague 3",
+          "date": null,
+          "statut": "a_surveiller",
+          "notes": "Date non encore publiée — prévu 2028."
+        }
+      ],
+      "tags": [
+        "DM",
+        "diagnostic",
+        "parcours patient",
+        "France 2030",
+        "commande publique"
+      ]
+    },
     {
       "id": "eic-accelerator",
       "nom": "EIC Accelerator",
@@ -151,7 +209,11 @@
       "type": "grant + equity",
       "trl": "6-9",
       "scope": "Deep-tech à fort impact, scaling PME et startups — MedTech éligible sur volet Open",
-      "cibles": ["PME", "Startups", "Small mid-caps (< 499 ETP)"],
+      "cibles": [
+        "PME",
+        "Startups",
+        "Small mid-caps (< 499 ETP)"
+      ],
       "budget_projet": "jusqu'à 2,5 M€ grant + 1-10 M€ equity",
       "url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-accelerator_en",
       "deadlines": [
@@ -182,7 +244,14 @@
           "statut": "ouvert"
         }
       ],
-      "tags": ["EIC", "deep-tech", "MedTech", "PME", "equity", "EU"]
+      "tags": [
+        "EIC",
+        "deep-tech",
+        "MedTech",
+        "PME",
+        "equity",
+        "EU"
+      ]
     },
     {
       "id": "eic-pathfinder",
@@ -192,7 +261,11 @@
       "type": "grant recherche",
       "trl": "1-4",
       "scope": "Recherche amont, technologies de rupture — MedTech très amont (ex. diagnostics, biocapteurs)",
-      "cibles": ["PME", "Organismes de recherche", "Consortia"],
+      "cibles": [
+        "PME",
+        "Organismes de recherche",
+        "Consortia"
+      ],
       "budget_projet": "jusqu'à 4 M€",
       "url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-pathfinder_en",
       "deadlines": [
@@ -207,7 +280,13 @@
           "statut": "ouvert"
         }
       ],
-      "tags": ["EIC", "recherche amont", "rupture", "TRL bas", "EU"]
+      "tags": [
+        "EIC",
+        "recherche amont",
+        "rupture",
+        "TRL bas",
+        "EU"
+      ]
     },
     {
       "id": "eic-transition",
@@ -217,7 +296,10 @@
       "type": "grant",
       "trl": "3-6",
       "scope": "Transfert technologique TRL 3-4 → 5-6, pour projets issus de Pathfinder/ERC PoC/RIA",
-      "cibles": ["PME", "Petits consortia (2-5 partenaires)"],
+      "cibles": [
+        "PME",
+        "Petits consortia (2-5 partenaires)"
+      ],
       "budget_projet": "jusqu'à 2,5 M€",
       "url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-transition_en",
       "deadlines": [
@@ -227,7 +309,12 @@
           "statut": "ouvert"
         }
       ],
-      "tags": ["EIC", "transfert techno", "TRL intermédiaire", "EU"]
+      "tags": [
+        "EIC",
+        "transfert techno",
+        "TRL intermédiaire",
+        "EU"
+      ]
     },
     {
       "id": "horizon-hlth-2026",
@@ -237,7 +324,9 @@
       "type": "grant collaboratif",
       "trl": "4-7",
       "scope": "NAMs pour DM, scaling cardiovasculaire, IA biomarqueurs, Virtual Human Twins, oncologie",
-      "cibles": ["Consortia (min. 3 entités, 3 pays EU)"],
+      "cibles": [
+        "Consortia (min. 3 entités, 3 pays EU)"
+      ],
       "budget_projet": "2-15 M€ selon topic",
       "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/programmes/horizon",
       "deadlines": [
@@ -254,7 +343,14 @@
           "notes": "Date indicative — vérifier sur Funding & Tenders Portal"
         }
       ],
-      "tags": ["Horizon Europe", "consortium", "DM", "cardio", "IA", "EU"]
+      "tags": [
+        "Horizon Europe",
+        "consortium",
+        "DM",
+        "cardio",
+        "IA",
+        "EU"
+      ]
     },
     {
       "id": "eit-health",
@@ -264,7 +360,11 @@
       "type": "subvention + accompagnement",
       "trl": "5-9",
       "scope": "Validation clinique, adoption hospitalière, go-to-market — projets collaboratifs hôpitaux + industriels",
-      "cibles": ["Hôpitaux", "PME MedTech", "Startups"],
+      "cibles": [
+        "Hôpitaux",
+        "PME MedTech",
+        "Startups"
+      ],
       "budget_projet": "50 K€ – 500 K€ selon programme",
       "url": "https://eithealth.eu/programmes/",
       "deadlines": [
@@ -275,7 +375,12 @@
           "notes": "Programmes annuels — vérifier eithealth.eu/programmes/"
         }
       ],
-      "tags": ["EIT Health", "adoption clinique", "validation", "EU"]
+      "tags": [
+        "EIT Health",
+        "adoption clinique",
+        "validation",
+        "EU"
+      ]
     }
   ]
 }
