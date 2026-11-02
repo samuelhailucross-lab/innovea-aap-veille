@@ -531,32 +531,6 @@
       "deadline": "2027-02-17",
       "callId": "HORIZON-HLTH-2027-02-DISEASE-14-two-stage",
       "description": "Appel ouvert. Call : Cluster 1 - Health (Two stage - 2027). Échéances : 2027-02-17, 2027-09-16."
-    },
-    {
-      "id": "eu-horizon-miss-2027-06-soil-cancer",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
-      "nom": "Living labs to monitor and mitigate carcinogenic substances in and originating from soils: Evaluating their effects on human cancer risks",
-      "organisme": "Commission européenne / Horizon Europe",
-      "niveau": "EU",
-      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-06-soil-cancer",
-      "deadline": "2027-09-21",
-      "callId": "HORIZON-MISS-2027-06-SOIL-CANCER",
-      "description": "Appel à venir (pas encore ouvert). Call : Joint Call between the Soil Deal for Europe Mission and the Cancer Mission."
-    },
-    {
-      "id": "page-dgos-phrc-2026-11-02",
-      "kind": "modifie",
-      "source": "page",
-      "detectedAt": "2026-11-02",
-      "nom": "Page modifiée : PHRC-N / PHRIP / PREPS / PRME",
-      "organisme": "DGOS / Ministère de la Santé",
-      "niveau": "FR",
-      "url": "https://sante.gouv.fr/professionnels/recherche-et-innovation/l-innovation-et-la-recherche-clinique/appels-a-projets/programmes-recherche",
-      "deadline": null,
-      "guichetId": "dgos-phrc",
-      "description": "Nouveau texte sur la page : « 2042403061481166207 »"
     }
   ],
   "traites": []

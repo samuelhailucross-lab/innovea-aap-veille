@@ -53,7 +53,7 @@ const EU_SEARCHES = [
 const ALWAYS = /^HORIZON-EIC-\d{4}-(ACCELERATOR|PATHFINDER|TRANSITION)|^HORIZON-JU-IHI/i
 const MEDTECH = /medical device|medtech|med-tech|imaging|diagnos|in vitro|point-of-care|radiolog|radiotherap|radiopharm|nuclear medicine|theranost|digital health|e-health|ehealth|health data|clinical decision|virtual human twin|artificial intelligence|\bAI\b|biomarker|monitoring|sensor|robot|telemedic|health technolog|healthcare system|hospital|procurement|oncolog|cancer|cardio|stroke|neurodegenerat|alzheimer|dementia|implant|surg|robotic/i
 const HEALTH = /health|santé|medic|clinic|patient|hospital|diagnos|imaging|cancer|disease|care\b|healthcare|^HORIZON-HLTH|^HORIZON-MISS-\d{4}-\d{2}-CANCER|^EU4H/i
-const EXCLUDE = /antibod|antivir|antimicrob|vaccin|small molecule|monoclonal|operating grant|CBRN|protective gear|cell-free protein|bio-?printing|exposome|climate/i
+const EXCLUDE = /antibod|antivir|antimicrob|vaccin|small molecule|monoclonal|operating grant|CBRN|protective gear|cell-free protein|bio-?printing|exposome|climate|soil/i
 const STATUS_FORTHCOMING = '31094501'
 const STATUS_OPEN = '31094502'
 
@@ -115,6 +115,7 @@ function pageText(html) {
     .replace(/&nbsp;|&#160;/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&#?\w+;/g, ' ')
+    .replace(/\b[\da-f]{7,}\b/gi, ' ') // build ids, cache busters
     .replace(/\s+/g, ' ')
     .trim()
 }
@@ -315,6 +316,11 @@ async function main() {
   data.traites = data.traites || []
   const state = readJson(STATE_FILE, { pages: {}, links: {} })
   state.pages = state.pages || {}
+  // Fingerprint format changed: re-baseline pages once rather than flag them.
+  if (state.version !== 2) {
+    state.pages = {}
+    state.version = 2
+  }
   state.links = state.links || {}
 
   const traites = new Set(data.traites)
