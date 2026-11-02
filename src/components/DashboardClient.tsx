@@ -1,46 +1,38 @@
 'use client'
 
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
+import { format, parseISO, isValid } from 'date-fns'
+import { fr } from 'date-fns/locale'
 import { FlatDeadline, Guichet, Statut } from '@/lib/types'
 import { AIRES, Aire, TRL_BANDS, TrlBand, trlMatches } from '@/lib/filters'
 
-const DEFAULT_STATUTS: Statut[] = ['ouvert', 'ouvert_continu', 'a_surveiller']
-const STATUT_FILTERS: { id: Statut; label: string }[] = [
-  { id: 'ouvert', label: 'Ouvert / date connue' },
-  { id: 'ouvert_continu', label: 'Ouvert en continu' },
-  { id: 'a_surveiller', label: 'À surveiller / prochaine vague' },
-  { id: 'ferme', label: 'Fermé' },
-]
-
-const labelStyle: React.CSSProperties = { fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600, display: 'block', marginBottom: 6 }
-const controlStyle: React.CSSProperties = { width: '100%', padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: 'white', color: '#374151' }
-const checkStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#374151', padding: '3px 0', cursor: 'pointer' }
-
-const STATUT_LABELS: Record<string, string> = {
+const STATUT_LABELS: Record<Statut, string> = {
   ouvert: 'Ouvert',
   ferme: 'Fermé',
-  ouvert_continu: 'Continu',
+  ouvert_continu: 'En continu',
   a_surveiller: 'À surveiller',
 }
 
-const STATUT_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  ouvert: { bg: '#f0fdf4', text: '#15803d', border: '#86efac' },
-  ferme: { bg: '#f9fafb', text: '#9ca3af', border: '#e5e7eb' },
-  ouvert_continu: { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe' },
-  a_surveiller: { bg: '#fefce8', text: '#a16207', border: '#fde68a' },
+const DEFAULT_STATUTS: Statut[] = ['ouvert', 'ouvert_continu', 'a_surveiller']
+const STATUT_FILTERS: { id: Statut; label: string }[] = [
+  { id: 'ouvert', label: 'Ouvert, date connue' },
+  { id: 'ouvert_continu', label: 'Ouvert en continu' },
+  { id: 'a_surveiller', label: 'À surveiller' },
+  { id: 'ferme', label: 'Fermé' },
+]
+
+const URGENT_DAYS = 30
+
+function formatDate(d: string | null, pattern = 'd MMM yyyy'): string {
+  if (!d) return ''
+  const p = parseISO(d)
+  return isValid(p) ? format(p, pattern, { locale: fr }) : d
 }
 
-const NIVEAU_COLORS: Record<string, { bg: string; text: string }> = {
-  FR: { bg: '#dbeafe', text: '#1e40af' },
-  EU: { bg: '#fce7f3', text: '#9d174d' },
-}
-
-function urgencyBadge(days: number | null): React.ReactNode {
-  if (days === null) return null
-  if (days < 0) return null
-  if (days <= 7) return <span style={{ color: '#dc2626', fontWeight: 600, fontSize: 12 }}>🔴 J-{days}</span>
-  if (days <= 30) return <span style={{ color: '#d97706', fontWeight: 600, fontSize: 12 }}>🟠 J-{days}</span>
-  return <span style={{ color: '#6b7280', fontSize: 12 }}>J-{days}</span>
+function countdown(days: number): string {
+  if (days === 0) return "Aujourd'hui"
+  if (days === 1) return 'Demain'
+  return `J-${days}`
 }
 
 interface Props {
@@ -49,6 +41,97 @@ interface Props {
   lastUpdated: string
   updatedBy: string
 }
+
+const CSS = `
+.aap { min-height: 100vh; }
+.aap-header { background: var(--petrol-deep); color: #fff; }
+.aap-header-inner { max-width: 1280px; margin: 0 auto; padding: 22px 24px 20px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.aap-owner { margin: 0 0 2px; font-size: 13px; color: #A9DADA; }
+.aap-title { margin: 0; font-size: 24px; line-height: 1.2; font-weight: 600; letter-spacing: -0.01em; }
+.aap-header-meta { display: flex; align-items: center; gap: 14px; font-size: 13px; color: #CDEAEA; }
+.aap-admin { color: #fff; text-decoration: none; font-weight: 600; font-size: 13px; padding: 7px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.35); }
+.aap-admin:hover { background: rgba(255,255,255,0.1); }
+
+.aap-main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+.aap-next { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 24px; }
+.aap-next-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 14px 20px 0; flex-wrap: wrap; }
+.aap-next-head h2 { margin: 0; font-size: 15px; font-weight: 600; }
+.aap-next-head p { margin: 0; font-size: 13px; color: var(--muted); }
+.aap-next-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.aap-next-item { padding: 14px 20px 18px; border-left: 1px solid var(--line); min-width: 0; }
+.aap-next-item:first-child { border-left: none; }
+.aap-days { font-size: 34px; line-height: 1.1; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; color: var(--petrol-deep); }
+.aap-next-item.is-urgent .aap-days { color: var(--orange); }
+.aap-next-date { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; margin-top: 2px; }
+.aap-next-item.is-urgent .aap-next-date { color: var(--orange-text); }
+.aap-next-name { font-size: 14px; font-weight: 600; margin-top: 8px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.aap-next-org { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.aap-next-empty { padding: 14px 20px 18px; font-size: 14px; color: var(--muted); }
+
+.aap-layout { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 24px; align-items: start; }
+.aap-filters { position: sticky; top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 16px; display: grid; gap: 20px; }
+.aap-filters h2 { margin: 0; font-size: 15px; font-weight: 600; }
+.aap-field-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.aap-control { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 14px; background: var(--surface); color: var(--ink); }
+.aap-control:focus { border-color: var(--petrol); outline: none; box-shadow: 0 0 0 3px var(--petrol-tint); }
+.aap-check { display: flex; align-items: center; gap: 8px; font-size: 14px; padding: 3px 0; cursor: pointer; }
+.aap-check input { accent-color: var(--petrol); width: 15px; height: 15px; margin: 0; }
+.aap-hint { font-size: 12px; color: var(--muted); margin: 4px 0 0; }
+.aap-reset { background: none; border: none; padding: 0; color: var(--petrol-deep); font-size: 13px; font-weight: 600; text-align: left; text-decoration: underline; text-underline-offset: 3px; }
+
+.aap-results { min-width: 0; }
+.aap-count { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+.aap-table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; }
+.aap-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+.aap-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.aap-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 14px; }
+.aap-row { cursor: pointer; }
+.aap-row:hover td { background: #F8FBFB; }
+.aap-row.is-closed td { color: var(--muted); }
+.aap-row.is-open-row td { border-bottom: none; }
+.aap-when { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.aap-when-date { font-weight: 600; }
+.aap-when-days { font-size: 12px; color: var(--muted); }
+.aap-when-days.is-urgent { color: var(--orange-text); font-weight: 600; }
+.aap-name { font-weight: 600; }
+.aap-row.is-closed .aap-name { font-weight: 500; }
+.aap-org { font-size: 13px; color: var(--muted); margin-top: 2px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.aap-niveau { font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); color: var(--ink); background: var(--bg); }
+.aap-pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.aap-pill.ouvert { background: var(--petrol-tint); color: var(--petrol-deep); }
+.aap-pill.ouvert_continu { background: #E8EEF7; color: #2E4A7A; }
+.aap-pill.a_surveiller { background: #F4F0E2; color: #6B5718; }
+.aap-pill.ferme { background: #EEF1F1; color: #6B7A7B; }
+
+.aap-detail td { background: #F8FBFB; padding: 4px 16px 20px; }
+.aap-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 28px; padding-top: 12px; max-width: 900px; }
+.aap-detail dt { font-size: 12px; font-weight: 600; color: var(--muted); }
+.aap-detail dd { margin: 2px 0 0; font-size: 14px; }
+.aap-note { margin: 16px 0 0; padding: 10px 12px; border-left: 3px solid var(--petrol); background: var(--surface); font-size: 13px; max-width: 900px; }
+.aap-detail-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 16px; }
+.aap-open { background: var(--petrol); color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 6px; }
+.aap-open:hover { background: var(--petrol-deep); }
+.aap-tag { font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+.aap-tag.aire { border-color: #B5DEDE; color: var(--petrol-deep); }
+
+.aap-empty { padding: 40px 16px; text-align: center; color: var(--muted); font-size: 14px; }
+.aap-footer { font-size: 12px; color: var(--muted); margin: 20px 0 0; }
+
+@media (max-width: 960px) {
+  .aap-next-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .aap-next-item:nth-child(3) { border-left: none; }
+  .aap-next-item:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+@media (max-width: 760px) {
+  .aap-layout { grid-template-columns: 1fr; }
+  .aap-filters { position: static; }
+  .aap-detail-grid { grid-template-columns: 1fr; }
+  .aap-title { font-size: 20px; }
+  .aap-main { padding: 16px; }
+  .aap-header-inner { padding: 18px 16px; }
+}
+`
 
 export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, updatedBy }: Props) {
   const [filterNiveau, setFilterNiveau] = useState<'ALL' | 'FR' | 'EU'>('ALL')
@@ -73,6 +156,10 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
     setSearch('')
   }
 
+  const filtersActive =
+    filterNiveau !== 'ALL' || filterTrl !== 'ALL' || filterAires.length > 0 || search !== '' ||
+    filterStatuts.length !== DEFAULT_STATUTS.length || !DEFAULT_STATUTS.every((s) => filterStatuts.includes(s))
+
   const filtered = flatDeadlines.filter((d) => {
     const g = guichetDetails[d.guichetId]
     if (filterNiveau !== 'ALL' && d.niveau !== filterNiveau) return false
@@ -92,227 +179,212 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
     return true
   })
 
-  const openCount = flatDeadlines.filter(d => d.deadline.statut === 'ouvert').length
-  const urgentCount = flatDeadlines.filter(d => d.daysUntil !== null && d.daysUntil >= 0 && d.daysUntil <= 30).length
-  const continuousCount = flatDeadlines.filter(d => d.deadline.statut === 'ouvert_continu').length
+  // Next dated deadlines still to come, across everything (not affected by filters).
+  const upcoming = flatDeadlines
+    .filter((d) => d.daysUntil !== null && d.daysUntil >= 0 && d.deadline.statut !== 'ferme')
+    .sort((a, b) => (a.daysUntil! - b.daysUntil!))
+  const nextFour = upcoming.slice(0, 4)
+  const urgentCount = upcoming.filter((d) => d.daysUntil! <= URGENT_DAYS).length
+  const continuousCount = flatDeadlines.filter((d) => d.deadline.statut === 'ouvert_continu').length
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
-      {/* Header */}
-      <div style={{ background: '#1e3a8a', padding: '20px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <p style={{ color: '#93c5fd', fontSize: 11, margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>INNOVÉA · Siemens Healthineers France</p>
-          <h1 style={{ color: 'white', fontSize: 20, margin: 0, fontWeight: 600 }}>Veille AAP MedTech</h1>
-        </div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <span style={{ fontSize: 12, color: '#93c5fd' }}>Mis à jour le {lastUpdated} par {updatedBy}</span>
-          <a
-            href="/admin"
-            style={{ background: 'rgba(255,255,255,0.15)', color: 'white', padding: '6px 14px', borderRadius: 6, fontSize: 13, textDecoration: 'none', border: '1px solid rgba(255,255,255,0.25)' }}
-          >
-            Admin →
-          </a>
-        </div>
-      </div>
+    <div className="aap">
+      <style>{CSS}</style>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '28px 24px' }}>
-        {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 28 }}>
-          {[
-            { label: 'Deadlines ouvertes', value: openCount, color: '#15803d', bg: '#f0fdf4' },
-            { label: 'Urgentes (≤ 30 jours)', value: urgentCount, color: '#c2410c', bg: '#fff7ed' },
-            { label: 'Guichets continus', value: continuousCount, color: '#1d4ed8', bg: '#eff6ff' },
-          ].map((s) => (
-            <div key={s.label} style={{ background: s.bg, borderRadius: 10, padding: '16px 20px', border: `1px solid ${s.bg}` }}>
-              <div style={{ fontSize: 28, fontWeight: 700, color: s.color }}>{s.value}</div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>{s.label}</div>
-            </div>
-          ))}
+      <header className="aap-header">
+        <div className="aap-header-inner">
+          <div>
+            <p className="aap-owner">INNOVÉA, Siemens Healthineers France</p>
+            <h1 className="aap-title">Veille des appels à projets MedTech</h1>
+          </div>
+          <div className="aap-header-meta">
+            <span>Mis à jour le {formatDate(lastUpdated, 'd MMMM yyyy')} par {updatedBy}</span>
+            <a href="/admin" className="aap-admin">Admin</a>
+          </div>
         </div>
+      </header>
 
-        <style>{`
-          .aap-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: start; }
-          .aap-sidebar { position: sticky; top: 16px; }
-          @media (max-width: 860px) {
-            .aap-layout { grid-template-columns: 1fr; }
-            .aap-sidebar { position: static; }
-          }
-        `}</style>
+      <main className="aap-main">
+        <section className="aap-next" aria-labelledby="next-title">
+          <div className="aap-next-head">
+            <h2 id="next-title">Prochaines clôtures</h2>
+            <p>
+              {urgentCount > 0 ? `${urgentCount} dans les ${URGENT_DAYS} prochains jours` : `Aucune dans les ${URGENT_DAYS} prochains jours`}
+              {continuousCount > 0 && `, et ${continuousCount} guichet${continuousCount > 1 ? 's' : ''} ouvert${continuousCount > 1 ? 's' : ''} en continu`}
+            </p>
+          </div>
+          {nextFour.length === 0 ? (
+            <p className="aap-next-empty">Aucune date de clôture à venir. Les nouveaux appels trouvés par le scan hebdomadaire arrivent dans l'admin.</p>
+          ) : (
+            <ol className="aap-next-list">
+              {nextFour.map((d) => (
+                <li key={`${d.guichetId}-${d.deadline.label}`} className={`aap-next-item${d.daysUntil! <= URGENT_DAYS ? ' is-urgent' : ''}`}>
+                  <div className="aap-days">{countdown(d.daysUntil!)}</div>
+                  <div className="aap-next-date">{formatDate(d.deadline.date, 'EEEE d MMMM yyyy')}</div>
+                  <div className="aap-next-name" title={d.guichetNom}>{d.guichetNom}</div>
+                  <div className="aap-next-org">{d.deadline.label}</div>
+                </li>
+              ))}
+            </ol>
+          )}
+        </section>
+
         <div className="aap-layout">
-        <aside className="aap-sidebar" style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: 12, padding: '18px 16px', display: 'grid', gap: 18 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#111827', letterSpacing: '0.04em' }}>FILTRES</div>
-          <div>
-            <label style={labelStyle} htmlFor="f-search">Recherche</label>
-            <input id="f-search" type="search" placeholder="robotique, cardio, imagerie…" value={search} onChange={(e) => setSearch(e.target.value)} style={controlStyle} />
-          </div>
-          <div>
-            <label style={labelStyle} htmlFor="f-niveau">Périmètre</label>
-            <select id="f-niveau" value={filterNiveau} onChange={(e) => setFilterNiveau(e.target.value as any)} style={controlStyle}>
-              <option value="ALL">Tous</option>
-              <option value="FR">France</option>
-              <option value="EU">Europe</option>
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle} htmlFor="f-trl">TRL</label>
-            <select id="f-trl" value={filterTrl} onChange={(e) => setFilterTrl(e.target.value as TrlBand)} style={controlStyle}>
-              {TRL_BANDS.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <span style={labelStyle}>Aires thérapeutiques</span>
-            {AIRES.map((a) => (
-              <label key={a.id} style={checkStyle}>
-                <input type="checkbox" checked={filterAires.includes(a.id)} onChange={() => setFilterAires(toggle(filterAires, a.id))} />
-                {a.label}
-              </label>
-            ))}
-            <p style={{ fontSize: 11, color: '#9ca3af', margin: '6px 0 0' }}>Les guichets transverses restent affichés.</p>
-          </div>
-          <div>
-            <span style={labelStyle}>Statut</span>
-            {STATUT_FILTERS.map((st) => (
-              <label key={st.id} style={checkStyle}>
-                <input type="checkbox" checked={filterStatuts.includes(st.id)} onChange={() => setFilterStatuts(toggle(filterStatuts, st.id))} />
-                {st.label}
-              </label>
-            ))}
-          </div>
-          <button onClick={resetFilters} style={{ background: '#f3f4f6', color: '#374151', border: '1px solid #e5e7eb', padding: '8px 12px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-            Réinitialiser
-          </button>
-        </aside>
+          <aside className="aap-filters" aria-label="Filtres">
+            <h2>Filtrer</h2>
+            <div>
+              <label className="aap-field-label" htmlFor="f-search">Recherche</label>
+              <input id="f-search" className="aap-control" type="search" placeholder="robotique, imagerie, IA…" value={search} onChange={(e) => setSearch(e.target.value)} />
+            </div>
+            <div>
+              <label className="aap-field-label" htmlFor="f-niveau">Périmètre</label>
+              <select id="f-niveau" className="aap-control" value={filterNiveau} onChange={(e) => setFilterNiveau(e.target.value as 'ALL' | 'FR' | 'EU')}>
+                <option value="ALL">France et Europe</option>
+                <option value="FR">France</option>
+                <option value="EU">Europe</option>
+              </select>
+            </div>
+            <div>
+              <label className="aap-field-label" htmlFor="f-trl">Maturité (TRL)</label>
+              <select id="f-trl" className="aap-control" value={filterTrl} onChange={(e) => setFilterTrl(e.target.value as TrlBand)}>
+                {TRL_BANDS.map((b) => <option key={b.id} value={b.id}>{b.id === 'ALL' ? 'Tous les TRL' : b.label}</option>)}
+              </select>
+            </div>
+            <fieldset style={{ border: 'none', margin: 0, padding: 0 }}>
+              <legend className="aap-field-label">Aires thérapeutiques</legend>
+              {AIRES.map((a) => (
+                <label key={a.id} className="aap-check">
+                  <input type="checkbox" checked={filterAires.includes(a.id)} onChange={() => setFilterAires(toggle(filterAires, a.id))} />
+                  {a.label}
+                </label>
+              ))}
+              <p className="aap-hint">Les guichets transverses restent affichés.</p>
+            </fieldset>
+            <fieldset style={{ border: 'none', margin: 0, padding: 0 }}>
+              <legend className="aap-field-label">Statut</legend>
+              {STATUT_FILTERS.map((st) => (
+                <label key={st.id} className="aap-check">
+                  <input type="checkbox" checked={filterStatuts.includes(st.id)} onChange={() => setFilterStatuts(toggle(filterStatuts, st.id))} />
+                  {st.label}
+                </label>
+              ))}
+            </fieldset>
+            {filtersActive && (
+              <button type="button" className="aap-reset" onClick={resetFilters}>Effacer les filtres</button>
+            )}
+          </aside>
 
-        <div style={{ minWidth: 0 }}>
-        <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 10px' }}>{filtered.length} échéance(s) affichée(s)</p>
-        {/* Table */}
-        <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ background: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
-                {['Guichet / Organisme', 'Niveau', 'Vague', 'Date', 'Statut', 'Urgence'].map((h) => (
-                  <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, color: '#6b7280', fontWeight: 500, letterSpacing: '0.02em' }}>
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: '#9ca3af', fontSize: 14 }}>
-                    Aucun résultat pour ces filtres.
-                  </td>
-                </tr>
-              )}
-              {filtered.map((d, i) => {
-                const sc = STATUT_COLORS[d.deadline.statut]
-                const nc = NIVEAU_COLORS[d.niveau]
-                const guichet = guichetDetails[d.guichetId]
-                const isExpanded = expandedId === `${d.guichetId}-${i}`
-
-                return (
-                  <>
-                    <tr
-                      key={`${d.guichetId}-${i}`}
-                      onClick={() => setExpandedId(isExpanded ? null : `${d.guichetId}-${i}`)}
-                      style={{
-                        borderBottom: isExpanded ? 'none' : '1px solid #f3f4f6',
-                        cursor: 'pointer',
-                        background: d.deadline.statut === 'ferme' ? '#fafafa' : 'white',
-                        opacity: d.deadline.statut === 'ferme' ? 0.6 : 1,
-                      }}
-                    >
-                      <td style={{ padding: '14px 16px' }}>
-                        <div style={{ fontWeight: 500, fontSize: 14, color: '#111827', marginBottom: 2 }}>
-                          {d.guichetNom}
-                        </div>
-                        <div style={{ fontSize: 12, color: '#6b7280' }}>{d.organisme}</div>
-                      </td>
-                      <td style={{ padding: '14px 16px' }}>
-                        <span style={{ background: nc.bg, color: nc.text, padding: '3px 10px', borderRadius: 5, fontSize: 12, fontWeight: 600 }}>
-                          {d.niveau}
-                        </span>
-                      </td>
-                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#374151' }}>
-                        {d.deadline.label}
-                      </td>
-                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#374151', whiteSpace: 'nowrap' }}>
-                        {d.deadline.date ?? '—'}
-                      </td>
-                      <td style={{ padding: '14px 16px' }}>
-                        <span style={{ background: sc.bg, color: sc.text, border: `1px solid ${sc.border}`, padding: '3px 10px', borderRadius: 5, fontSize: 12 }}>
-                          {STATUT_LABELS[d.deadline.statut]}
-                        </span>
-                      </td>
-                      <td style={{ padding: '14px 16px' }}>
-                        {urgencyBadge(d.daysUntil)}
+          <div className="aap-results">
+            <p className="aap-count" aria-live="polite">
+              {filtered.length} échéance{filtered.length > 1 ? 's' : ''} sur {flatDeadlines.length}
+            </p>
+            <div className="aap-table-wrap">
+              <table className="aap-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Clôture</th>
+                    <th scope="col">Guichet</th>
+                    <th scope="col">Vague</th>
+                    <th scope="col">Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.length === 0 && (
+                    <tr>
+                      <td colSpan={4} className="aap-empty">
+                        Aucune échéance ne correspond à ces filtres.{' '}
+                        <button type="button" className="aap-reset" onClick={resetFilters}>Effacer les filtres</button>
                       </td>
                     </tr>
-                    {isExpanded && guichet && (
-                      <tr key={`${d.guichetId}-${i}-expand`} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                        <td colSpan={6} style={{ padding: '0 16px 16px 16px', background: '#f8fafc' }}>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, padding: '16px 0' }}>
-                            <div>
-                              <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Scope</p>
-                              <p style={{ fontSize: 13, color: '#374151', margin: 0 }}>{guichet.scope}</p>
+                  )}
+                  {filtered.map((d, i) => {
+                    const rowId = `${d.guichetId}-${i}`
+                    const guichet = guichetDetails[d.guichetId]
+                    const isExpanded = expandedId === rowId
+                    const closed = d.deadline.statut === 'ferme'
+                    const upcomingDays = !closed && d.daysUntil !== null && d.daysUntil >= 0 ? d.daysUntil : null
+                    return (
+                      <Fragment key={rowId}>
+                        <tr
+                          className={`aap-row${closed ? ' is-closed' : ''}${isExpanded ? ' is-open-row' : ''}`}
+                          onClick={() => setExpandedId(isExpanded ? null : rowId)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              setExpandedId(isExpanded ? null : rowId)
+                            }
+                          }}
+                          tabIndex={0}
+                          aria-expanded={isExpanded}
+                        >
+                          <td className="aap-when">
+                            {d.deadline.date ? (
+                              <>
+                                <div className="aap-when-date">{formatDate(d.deadline.date)}</div>
+                                {upcomingDays !== null && (
+                                  <div className={`aap-when-days${upcomingDays <= URGENT_DAYS ? ' is-urgent' : ''}`}>{countdown(upcomingDays)}</div>
+                                )}
+                              </>
+                            ) : (
+                              <div className="aap-when-days">Pas de date</div>
+                            )}
+                          </td>
+                          <td>
+                            <div className="aap-name">{d.guichetNom}</div>
+                            <div className="aap-org">
+                              <span className="aap-niveau">{d.niveau}</span>
+                              <span>{d.organisme}</span>
                             </div>
-                            <div>
-                              <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>TRL · Budget projet</p>
-                              <p style={{ fontSize: 13, color: '#374151', margin: 0 }}>TRL {guichet.trl} · {guichet.budget_projet}</p>
-                            </div>
-                            <div>
-                              <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Cibles</p>
-                              <p style={{ fontSize: 13, color: '#374151', margin: 0 }}>{guichet.cibles.join(', ')}</p>
-                            </div>
-                            <div>
-                              <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Type</p>
-                              <p style={{ fontSize: 13, color: '#374151', margin: 0 }}>{guichet.type}</p>
-                            </div>
-                          </div>
-                          {d.deadline.notes && (
-                            <div style={{ background: '#fef9c3', border: '1px solid #fde68a', borderRadius: 6, padding: '8px 12px', marginBottom: 10 }}>
-                              <p style={{ fontSize: 12, color: '#92400e', margin: 0 }}>📌 {d.deadline.notes}</p>
-                            </div>
-                          )}
-                          <div style={{ display: 'flex', gap: 8 }}>
-                            <a
-                              href={guichet.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              style={{ background: '#1e3a8a', color: 'white', padding: '6px 14px', borderRadius: 6, fontSize: 13, textDecoration: 'none', fontWeight: 500 }}
-                            >
-                              Accéder au guichet →
-                            </a>
-                            {(guichet.aires || []).map((a) => (
-                              <span key={a} style={{ background: '#ecfeff', color: '#0e7490', padding: '5px 10px', borderRadius: 5, fontSize: 12 }}>
-                                {AIRES.find((x) => x.id === a)?.label}
-                              </span>
-                            ))}
-                            {guichet.tags.map((t) => (
-                              <span key={t} style={{ background: '#f1f5f9', color: '#64748b', padding: '5px 10px', borderRadius: 5, fontSize: 12 }}>
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </>
-                )
-              })}
-            </tbody>
-          </table>
+                          </td>
+                          <td>{d.deadline.label}</td>
+                          <td><span className={`aap-pill ${d.deadline.statut}`}>{STATUT_LABELS[d.deadline.statut]}</span></td>
+                        </tr>
+                        {isExpanded && guichet && (
+                          <tr className="aap-detail">
+                            <td colSpan={4}>
+                              <dl className="aap-detail-grid">
+                                <div>
+                                  <dt>Périmètre</dt>
+                                  <dd>{guichet.scope || 'Non renseigné'}</dd>
+                                </div>
+                                <div>
+                                  <dt>Pour qui</dt>
+                                  <dd>{guichet.cibles.length ? guichet.cibles.join(', ') : 'Non renseigné'}</dd>
+                                </div>
+                                <div>
+                                  <dt>TRL et budget projet</dt>
+                                  <dd>TRL {guichet.trl}, {guichet.budget_projet}</dd>
+                                </div>
+                                <div>
+                                  <dt>Type de financement</dt>
+                                  <dd>{guichet.type}</dd>
+                                </div>
+                              </dl>
+                              {d.deadline.notes && <p className="aap-note">{d.deadline.notes}</p>}
+                              <div className="aap-detail-actions">
+                                <a href={guichet.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="aap-open">
+                                  Ouvrir la page du guichet
+                                </a>
+                                {(guichet.aires || []).map((a) => (
+                                  <span key={a} className="aap-tag aire">{AIRES.find((x) => x.id === a)?.label}</span>
+                                ))}
+                                {guichet.tags.map((t) => (
+                                  <span key={t} className="aap-tag">{t}</span>
+                                ))}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </Fragment>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <p className="aap-footer">Restricted © Siemens Healthineers</p>
+          </div>
         </div>
-
-        </div>
-        </div>
-
-        <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 16, textAlign: 'right' }}>
-          INNOVÉA · Siemens Healthineers France · Restricted © Siemens Healthineers
-        </p>
-      </div>
+      </main>
     </div>
   )
 }
