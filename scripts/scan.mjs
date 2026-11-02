@@ -34,10 +34,16 @@ const EU_SEARCHES = [
   'theranostics',
   'HORIZON-HLTH',
   'EU4H',
+  'EIC Accelerator',
+  'EIC Pathfinder',
+  'EIC Transition',
+  'Innovative Health Initiative',
 ]
-// A topic is kept if it is a Horizon health / EU4Health topic, or if its
-// title or call mentions a MedTech term.
-const MEDTECH = /medical device|medtech|med-tech|imaging|diagnos|in vitro|radiolog|radiopharm|theranost|digital health|e-health|ehealth|health data|clinical|hospital|patient|cancer|oncolog|cardio|artificial intelligence.*health|health.*artificial intelligence/i
+// Kept: the EIC instruments and IHI topics always; otherwise a topic whose
+// identifier, title or call mentions a MedTech term and no pharma/off-scope term.
+const ALWAYS = /^HORIZON-EIC-\d{4}-(ACCELERATOR|PATHFINDER|TRANSITION)|^HORIZON-JU-IHI/i
+const MEDTECH = /medical device|medtech|med-tech|imaging|diagnos|in vitro|point-of-care|radiolog|radiotherap|radiopharm|nuclear medicine|theranost|digital health|e-health|ehealth|health data|clinical decision|virtual human twin|artificial intelligence|\bAI\b|biomarker|monitoring|sensor|robot|telemedic|health technolog|healthcare system|hospital|procurement/i
+const EXCLUDE = /antibod|antivir|antimicrob|vaccin|small molecule|monoclonal|operating grant|CBRN|protective gear|cell-free protein|bio-?printing|exposome|climate/i
 const STATUS_FORTHCOMING = '31094501'
 const STATUS_OPEN = '31094502'
 
@@ -139,7 +145,8 @@ async function scanEu(isKnown) {
         if (!id || found.has(id)) continue
         const title = stripHtml(first(m.title) || r.title || r.summary || id)
         const callTitle = stripHtml(first(m.callTitle) || '')
-        if (!/^(HORIZON-HLTH|EU4H)/i.test(id) && !MEDTECH.test(`${title} ${callTitle}`)) continue
+        const text = `${id} ${title} ${callTitle}`
+        if (!ALWAYS.test(id) && (EXCLUDE.test(text) || !MEDTECH.test(text))) continue
         // Earliest deadline still to come (two-stage topics have two)
         const dates = (Array.isArray(m.deadlineDate) ? m.deadlineDate : [m.deadlineDate])
           .filter(Boolean)
