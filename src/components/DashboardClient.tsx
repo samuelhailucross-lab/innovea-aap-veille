@@ -63,6 +63,7 @@ const CSS = `
 .aap-next-item:first-child { border-left: none; }
 .aap-days { font-size: 34px; line-height: 1.1; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; color: var(--petrol-deep); }
 .aap-next-item.is-urgent .aap-days { color: var(--orange); }
+.aap-next-item.is-continuous .aap-days { font-size: 22px; line-height: 1.7; color: var(--petrol); }
 .aap-next-date { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; margin-top: 2px; }
 .aap-next-item.is-urgent .aap-next-date { color: var(--orange-text); }
 .aap-next-name { font-size: 14px; font-weight: 600; margin-top: 8px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
@@ -183,9 +184,11 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
   const upcoming = flatDeadlines
     .filter((d) => d.daysUntil !== null && d.daysUntil >= 0 && d.deadline.statut !== 'ferme')
     .sort((a, b) => (a.daysUntil! - b.daysUntil!))
-  const nextFour = upcoming.slice(0, 4)
+  // Fill the strip with continuously open guichets when few dated deadlines remain.
+  const continuous = flatDeadlines.filter((d) => d.deadline.statut === 'ouvert_continu')
+  const nextFour = [...upcoming.slice(0, 4), ...continuous].slice(0, 4)
   const urgentCount = upcoming.filter((d) => d.daysUntil! <= URGENT_DAYS).length
-  const continuousCount = flatDeadlines.filter((d) => d.deadline.statut === 'ouvert_continu').length
+  const continuousCount = continuous.length
 
   return (
     <div className="aap">
@@ -218,9 +221,9 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
           ) : (
             <ol className="aap-next-list">
               {nextFour.map((d) => (
-                <li key={`${d.guichetId}-${d.deadline.label}`} className={`aap-next-item${d.daysUntil! <= URGENT_DAYS ? ' is-urgent' : ''}`}>
-                  <div className="aap-days">{countdown(d.daysUntil!)}</div>
-                  <div className="aap-next-date">{formatDate(d.deadline.date, 'EEEE d MMMM yyyy')}</div>
+                <li key={`${d.guichetId}-${d.deadline.label}`} className={`aap-next-item${d.daysUntil !== null && d.daysUntil <= URGENT_DAYS ? ' is-urgent' : ''}${d.daysUntil === null ? ' is-continuous' : ''}`}>
+                  <div className="aap-days">{d.daysUntil === null ? 'En continu' : countdown(d.daysUntil)}</div>
+                  <div className="aap-next-date">{d.daysUntil === null ? 'Dépôt possible à tout moment' : formatDate(d.deadline.date, 'EEEE d MMMM yyyy')}</div>
                   <div className="aap-next-name" title={d.guichetNom}>{d.guichetNom}</div>
                   <div className="aap-next-org">{d.deadline.label}</div>
                 </li>

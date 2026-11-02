@@ -1,5 +1,5 @@
 import { AapData, Deadline, FlatDeadline, Statut } from './types'
-import { differenceInDays, parseISO, isValid } from 'date-fns'
+import { differenceInCalendarDays, parseISO, isValid } from 'date-fns'
 import path from 'path'
 import fs from 'fs'
 
@@ -13,7 +13,7 @@ export function getDaysUntil(dateStr: string | null): number | null {
   if (!dateStr) return null
   const d = parseISO(dateStr)
   if (!isValid(d)) return null
-  return differenceInDays(d, new Date())
+  return differenceInCalendarDays(d, new Date())
 }
 
 // A deadline marked "ouvert" whose date has passed is shown as "ferme".
