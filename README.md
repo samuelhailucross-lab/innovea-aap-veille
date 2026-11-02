@@ -201,3 +201,9 @@ npm run dev
 ---
 
 *INNOVÉA · Siemens Healthineers France · Restricted © Siemens Healthineers*
+
+## Mise à jour automatique
+
+- **Deadlines expirées** : une échéance « ouvert » dont la date est passée s'affiche « Fermé » sur le dashboard et dans le digest, sans modifier le JSON.
+- **Scan hebdomadaire** (`.github/workflows/weekly-scan.yml`, lundi 06:00) : `scripts/scan.mjs` interroge le portail Funding & Tenders de l'UE, surveille les pages des guichets français et la liste des AAP Bpifrance. Les résultats arrivent dans la section **À valider** de `/admin` (Valider / Rejeter) ; rien n'est publié sans validation. Le journal du dernier scan est dans `data/scan-state.json`.
+- **Sauvegarde admin** : `/api/save` committe `data/aap-data.json` sur GitHub via `GITHUB_TOKEN` ; Vercel redéploie automatiquement.

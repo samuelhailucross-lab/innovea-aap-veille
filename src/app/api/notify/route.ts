@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No recipients configured in NOTIFY_EMAILS' }, { status: 400 })
   }
 
-  await sendMonthlyDigest(flatDeadlines, recipients)
+  const appUrl = req.nextUrl.origin
+  await sendMonthlyDigest(flatDeadlines, recipients, (data.candidats || []).length, appUrl)
 
   return NextResponse.json({ ok: true, sent_to: recipients.length })
 }

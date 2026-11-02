@@ -1,13 +1,29 @@
 'use client'
 
 import { useState } from 'react'
-import { AapData, Guichet, Deadline } from '@/lib/types'
+import { AapData, Guichet, Deadline, Candidat } from '@/lib/types'
 
 interface Props {
   data: AapData
 }
 
 const STATUT_OPTIONS = ['ouvert', 'ouvert_continu', 'a_surveiller', 'ferme'] as const
+
+function isExpired(dl: Deadline): boolean {
+  if (dl.statut !== 'ouvert' || !dl.date) return false
+  const today = new Date().toISOString().split('T')[0]
+  return dl.date < today
+}
+
+function slugify(s: string): string {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)
+}
+
+const SOURCE_LABELS: Record<Candidat['source'], string> = {
+  'EU-FT': 'Portail Funding & Tenders (UE)',
+  page: 'Page du guichet modifiée',
+  liens: 'Nouveau lien détecté',
+}
 
 export default function AdminClient({ data }: Props) {
   const [guichets, setGuichets] = useState<Guichet[]>(data.guichets)
@@ -16,6 +32,47 @@ export default function AdminClient({ data }: Props) {
   const [saved, setSaved] = useState(false)
   const [showAddDeadline, setShowAddDeadline] = useState<string | null>(null)
   const [newDeadline, setNewDeadline] = useState<Partial<Deadline>>({ label: '', date: '', statut: 'ouvert', notes: '' })
+  const [candidats, setCandidats] = useState<Candidat[]>(data.candidats || [])
+  const [traites, setTraites] = useState<string[]>(data.traites || [])
+  const [cibleGuichet, setCibleGuichet] = useState<Record<string, string>>({})
+
+  function closeCandidat(c: Candidat) {
+    setCandidats((cs) => cs.filter((x) => x.id !== c.id))
+    setTraites((ts) => (ts.includes(c.id) ? ts : [...ts, c.id]))
+  }
+
+  function validerCandidat(c: Candidat) {
+    const deadline: Deadline = {
+      label: c.callId || 'Appel',
+      date: c.deadline,
+      statut: c.deadline ? 'ouvert' : 'a_surveiller',
+      notes: c.callId && c.callId !== c.nom ? c.nom : undefined,
+    }
+    const target = cibleGuichet[c.id]
+    if (target) {
+      // Add as a new deadline on an existing guichet
+      setGuichets((gs) => gs.map((g) => (g.id !== target ? g : { ...g, deadlines: [...g.deadlines, deadline] })))
+    } else {
+      let id = slugify(c.callId || c.nom) || c.id
+      while (guichets.some((g) => g.id === id)) id = id + '-2'
+      const g: Guichet = {
+        id,
+        nom: c.nom,
+        organisme: c.organisme,
+        niveau: c.niveau,
+        type: 'À préciser',
+        trl: '—',
+        scope: c.description || '',
+        cibles: [],
+        budget_projet: '—',
+        url: c.url,
+        deadlines: [deadline],
+        tags: [],
+      }
+      setGuichets((gs) => [...gs, g])
+    }
+    closeCandidat(c)
+  }
 
   function updateDeadline(guichetId: string, dlIndex: number, field: keyof Deadline, value: string) {
     setGuichets((gs) =>
@@ -72,8 +129,11 @@ export default function AdminClient({ data }: Props) {
       meta: {
         lastUpdated: new Date().toISOString().split('T')[0],
         updatedBy: 'Admin',
+        ...(data.meta.lastScan ? { lastScan: data.meta.lastScan } : {}),
       },
       guichets,
+      candidats,
+      traites,
     }
     try {
       const res = await fetch('/api/save', {
@@ -117,8 +177,72 @@ export default function AdminClient({ data }: Props) {
 
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '28px 24px' }}>
         <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 24 }}>
-          Les modifications sont sauvegardées dans <code>data/aap-data.json</code>. Pensez à commiter le fichier sur GitHub après chaque mise à jour importante.
+          « Sauvegarder » publie les modifications sur GitHub ; le dashboard est mis à jour environ 1 minute plus tard.
+          {data.meta.lastScan && <> Dernier scan automatique : {data.meta.lastScan}.</>}
         </p>
+
+        {candidats.length > 0 && (
+          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '18px 20px', marginBottom: 28 }}>
+            <h2 style={{ fontSize: 15, fontWeight: 600, color: '#92400e', margin: '0 0 4px' }}>À valider ({candidats.length})</h2>
+            <p style={{ fontSize: 12, color: '#a16207', margin: '0 0 14px' }}>
+              Trouvés par le scan hebdomadaire. Rien n'apparaît sur le dashboard avant validation. Pensez à « Sauvegarder » ensuite.
+            </p>
+            {candidats.map((c) => (
+              <div key={c.id} style={{ background: 'white', border: '1px solid #fde68a', borderRadius: 8, padding: '12px 14px', marginBottom: 10 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'flex-start' }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>
+                      {c.kind === 'modifie' ? '✎ ' : ''}{c.nom}
+                    </div>
+                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
+                      {c.organisme} · {c.niveau}{c.callId ? ` · ${c.callId}` : ''} · {c.deadline ? `Clôture ${c.deadline}` : 'Pas de date'}
+                    </div>
+                    {c.description && (
+                      <div style={{ fontSize: 12, color: '#374151', marginTop: 6 }}>{c.description}</div>
+                    )}
+                    <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 6 }}>
+                      {SOURCE_LABELS[c.source]} · détecté le {c.detectedAt} ·{' '}
+                      <a href={c.url} target="_blank" rel="noopener noreferrer" style={{ color: '#1d4ed8' }}>Ouvrir la source →</a>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0, width: 200 }}>
+                    {c.kind === 'nouveau' ? (
+                      <>
+                        <select
+                          value={cibleGuichet[c.id] || ''}
+                          onChange={(e) => setCibleGuichet({ ...cibleGuichet, [c.id]: e.target.value })}
+                          style={{ padding: '6px 8px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 12 }}
+                        >
+                          <option value="">Nouveau guichet</option>
+                          {guichets.map((g) => (
+                            <option key={g.id} value={g.id}>Ajouter à : {g.nom}</option>
+                          ))}
+                        </select>
+                        <button onClick={() => validerCandidat(c)} style={{ background: '#15803d', color: 'white', border: 'none', padding: '6px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                          Valider
+                        </button>
+                        <button onClick={() => closeCandidat(c)} style={{ background: 'white', color: '#dc2626', border: '1px solid #fecaca', padding: '6px 10px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>
+                          Rejeter
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        {c.guichetId && (
+                          <button onClick={() => setEditingId(c.guichetId!)} style={{ background: 'white', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '6px 10px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>
+                            Modifier le guichet
+                          </button>
+                        )}
+                        <button onClick={() => closeCandidat(c)} style={{ background: '#f3f4f6', color: '#374151', border: 'none', padding: '6px 10px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>
+                          Marquer comme vu
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {guichets.map((g) => (
           <div key={g.id} style={{ background: 'white', borderRadius: 10, border: '1px solid #e5e7eb', marginBottom: 16, overflow: 'hidden' }}>
@@ -173,6 +297,9 @@ export default function AdminClient({ data }: Props) {
                       >
                         {STATUT_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
                       </select>
+                      {isExpired(dl) && (
+                        <span style={{ fontSize: 11, color: '#9ca3af', display: 'block', marginTop: 3 }}>Date passée : affichée « Fermé »</span>
+                      )}
                     </div>
                     <div>
                       <label style={{ fontSize: 11, color: '#9ca3af', display: 'block', marginBottom: 3 }}>Notes</label>

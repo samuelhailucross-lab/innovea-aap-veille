@@ -1,4 +1,4 @@
-import { AapData, FlatDeadline, Guichet } from './types'
+import { AapData, Deadline, FlatDeadline, Statut } from './types'
 import { differenceInDays, parseISO, isValid } from 'date-fns'
 import path from 'path'
 import fs from 'fs'
@@ -16,6 +16,14 @@ export function getDaysUntil(dateStr: string | null): number | null {
   return differenceInDays(d, new Date())
 }
 
+// A deadline marked "ouvert" whose date has passed is shown as "ferme".
+// The JSON is not changed; only what the dashboard and digest display.
+export function getEffectiveStatut(dl: Deadline): Statut {
+  const days = getDaysUntil(dl.date)
+  if (dl.statut === 'ouvert' && days !== null && days < 0) return 'ferme'
+  return dl.statut
+}
+
 export function getFlatDeadlines(data: AapData): FlatDeadline[] {
   const flat: FlatDeadline[] = []
   for (const g of data.guichets) {
@@ -26,7 +34,7 @@ export function getFlatDeadlines(data: AapData): FlatDeadline[] {
         organisme: g.organisme,
         niveau: g.niveau,
         url: g.url,
-        deadline: dl,
+        deadline: { ...dl, statut: getEffectiveStatut(dl) },
         daysUntil: getDaysUntil(dl.date),
       })
     }

@@ -28,12 +28,31 @@ export interface Guichet {
   tags: string[]
 }
 
+// A call or a page change found by the weekly scanner, waiting for review in /admin.
+export interface Candidat {
+  id: string
+  kind: 'nouveau' | 'modifie'
+  source: 'EU-FT' | 'page' | 'liens'
+  detectedAt: string
+  nom: string
+  organisme: string
+  niveau: Niveau
+  url: string
+  deadline: string | null
+  callId?: string
+  description?: string
+  guichetId?: string // for 'modifie': the guichet whose page changed
+}
+
 export interface AapData {
   meta: {
     lastUpdated: string
     updatedBy: string
+    lastScan?: string
   }
   guichets: Guichet[]
+  candidats?: Candidat[]
+  traites?: string[] // candidate ids already validated or rejected — never re-proposed
 }
 
 export interface FlatDeadline {

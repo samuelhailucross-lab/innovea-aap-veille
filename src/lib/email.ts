@@ -22,7 +22,9 @@ function urgencyLabel(days: number): string {
 
 export async function sendMonthlyDigest(
   deadlines: FlatDeadline[],
-  recipients: string[]
+  recipients: string[],
+  pendingCount = 0,
+  appUrl = ''
 ): Promise<void> {
   const upcoming = deadlines
     .filter((d) => d.daysUntil !== null && d.daysUntil >= 0 && d.deadline.statut !== 'ferme')
@@ -77,6 +79,14 @@ export async function sendMonthlyDigest(
           <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">à surveiller</div>
         </div>
       </div>
+
+      ${pendingCount > 0 ? `
+      <div style="margin-bottom: 20px; padding: 14px 16px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px;">
+        <p style="font-size: 14px; color: #92400e; margin: 0;">
+          <strong>${pendingCount} appel(s) ou changement(s) détecté(s) par le scan automatique</strong> attendent une validation.
+          ${appUrl ? `<a href="${appUrl}/admin" style="color: #1d4ed8;">Ouvrir l'admin →</a>` : ''}
+        </p>
+      </div>` : ''}
 
       <h2 style="font-size: 16px; font-weight: 600; color: #111827; margin: 0 0 12px;">Deadlines à venir</h2>
       

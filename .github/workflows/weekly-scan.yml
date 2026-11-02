@@ -1,0 +1,49 @@
+name: Weekly AAP Scan
+
+# Every Monday 06:00 Paris (05:00 UTC), before the digest check at 08:00.
+# Finds new EU calls and changed French pages, adds them to "À valider" in /admin.
+# The weekly commit also keeps the repo active, so GitHub doesn't disable
+# scheduled workflows after 60 days of inactivity.
+on:
+  schedule:
+    - cron: '0 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aap-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Scan sources
+        run: node scripts/scan.mjs
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/aap-data.json data/scan-state.json
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git commit -m "scan: veille automatique ($(date +%Y-%m-%d))"
+          # An admin save may have landed during the scan: rebase, then push.
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            echo "Push failed, retrying ($i)"
+            git rebase --abort 2>/dev/null || true
+            sleep 10
+          done
+          exit 1

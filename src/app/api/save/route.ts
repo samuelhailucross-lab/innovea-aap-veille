@@ -44,7 +44,24 @@ export async function POST(req: NextRequest) {
       { status: 502 }
     )
   }
-  const { sha } = await current.json()
+  const currentFile = await current.json()
+  const sha = currentFile.sha
+
+  // Keep candidates the weekly scan added after this admin page was loaded,
+  // so a save never wipes them out. Scanner metadata is also preserved.
+  try {
+    const onGithub = JSON.parse(Buffer.from(currentFile.content || '', 'base64').toString('utf-8'))
+    const handled = new Set<string>([
+      ...(data.traites || []),
+      ...((data.candidats || []).map((c: any) => c.id)),
+    ])
+    const newer = (onGithub.candidats || []).filter((c: any) => !handled.has(c.id))
+    data.candidats = [...(data.candidats || []), ...newer]
+    data.traites = Array.from(new Set([...(onGithub.traites || []), ...(data.traites || [])]))
+    if (onGithub.meta?.lastScan) data.meta = { ...data.meta, lastScan: onGithub.meta.lastScan }
+  } catch {
+    // If the stored file can't be read, save what the admin sent.
+  }
 
   // 2. Commit the new content
   const content = Buffer.from(JSON.stringify(data, null, 2) + '\n', 'utf-8').toString('base64')
