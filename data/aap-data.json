@@ -387,22 +387,216 @@
         "validation",
         "EU"
       ]
-    }
-  ],
-  "candidats": [
+    },
     {
-      "id": "eu-horizon-miss-2027-02-cancer-05",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
+      "id": "horizon-miss-2027-02-cancer-05",
       "nom": "Pre-commercial procurement of affordable solutions for healthcare systems in the areas of cancer technologies, cancer medical devices, or cancer medicines",
       "organisme": "Commission européenne / Horizon Europe",
       "niveau": "EU",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission.",
+      "cibles": [],
+      "budget_projet": "—",
       "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-05",
-      "deadline": "2027-09-16",
-      "callId": "HORIZON-MISS-2027-02-CANCER-05",
-      "description": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission."
+      "deadlines": [
+        {
+          "label": "HORIZON-MISS-2027-02-CANCER-05",
+          "date": "2027-09-16",
+          "statut": "ouvert",
+          "notes": "Pre-commercial procurement of affordable solutions for healthcare systems in the areas of cancer technologies, cancer medical devices, or cancer medicines"
+        }
+      ],
+      "tags": [],
+      "aires": [
+        "oncologie"
+      ]
     },
+    {
+      "id": "horizon-hlth-2027-03-tool-04",
+      "nom": "Virtual Human Twins (VHTs) for integrated clinical decision support in prevention and diagnosis",
+      "organisme": "Commission européenne / HaDEA",
+      "niveau": "EU",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Appel à venir (pas encore ouvert). Call : Cluster 1 - Health (Single stage - 2027/2).",
+      "cibles": [],
+      "budget_projet": "—",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-hlth-2027-03-tool-04",
+      "deadlines": [
+        {
+          "label": "HORIZON-HLTH-2027-03-TOOL-04",
+          "date": "2027-09-16",
+          "statut": "ouvert",
+          "notes": "Virtual Human Twins (VHTs) for integrated clinical decision support in prevention and diagnosis"
+        }
+      ],
+      "tags": [],
+      "aires": []
+    },
+    {
+      "id": "horizon-hlth-2027-03-tool-08",
+      "nom": "Towards the next generation of frontier Artificial Intelligence models for healthcare",
+      "organisme": "Commission européenne / HaDEA",
+      "niveau": "EU",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Appel à venir (pas encore ouvert). Call : Cluster 1 - Health (Single stage - 2027/2).",
+      "cibles": [],
+      "budget_projet": "—",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-hlth-2027-03-tool-08",
+      "deadlines": [
+        {
+          "label": "HORIZON-HLTH-2027-03-TOOL-08",
+          "date": "2027-09-16",
+          "statut": "ouvert",
+          "notes": "Towards the next generation of frontier Artificial Intelligence models for healthcare"
+        }
+      ],
+      "tags": [],
+      "aires": []
+    },
+    {
+      "id": "horizon-miss-2027-02-cancer-03",
+      "nom": "Phase 1 including first-in-human clinical trials to test biomarker-guided medicines or multi-modal treatment interventions for patients with rare or very rare cancers or cancer subtypes",
+      "organisme": "Commission européenne / Horizon Europe",
+      "niveau": "EU",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission.",
+      "cibles": [],
+      "budget_projet": "—",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-03",
+      "deadlines": [
+        {
+          "label": "HORIZON-MISS-2027-02-CANCER-03",
+          "date": "2027-09-16",
+          "statut": "ouvert",
+          "notes": "Phase 1 including first-in-human clinical trials to test biomarker-guided medicines or multi-modal treatment interventions for patients with rare or very rare cancers or cancer subtypes"
+        }
+      ],
+      "tags": [],
+      "aires": [
+        "oncologie"
+      ]
+    },
+    {
+      "id": "horizon-eic-2026-accelerator-01",
+      "nom": "EIC Accelerator 2026 - Short proposal",
+      "organisme": "Commission européenne / EIC",
+      "niveau": "EU",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Appel ouvert. Call : EIC Accelerator 2026 - Short application.",
+      "cibles": [],
+      "budget_projet": "—",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-eic-2026-accelerator-01",
+      "deadlines": [
+        {
+          "label": "HORIZON-EIC-2026-ACCELERATOR-01",
+          "date": "2026-11-04",
+          "statut": "ouvert",
+          "notes": "EIC Accelerator 2026 - Short proposal"
+        }
+      ],
+      "tags": [],
+      "aires": []
+    },
+    {
+      "id": "fasep-2026-solutions-innovantes-pour-les-systemes-de-sante-e",
+      "nom": "FASEP 2026 — Solutions innovantes pour les systèmes de santé (export)",
+      "organisme": "DG Trésor / FASEP",
+      "niveau": "FR",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Ajouté manuellement. Édition 2026 close le 30 sept. 2026 (résultats fin nov.), appel annuel. Démonstrateurs de solutions de santé innovantes dans des pays en développement (imagerie, IA, aide à la décision, télémédecine…), bénéficiaire public local, 200–500 k€, entreprise française (CA > 2 M€). Pharma et R&D exclus. Fenêtre de dépôt au fil de l'eau mentionnée.",
+      "cibles": [],
+      "budget_projet": "—",
+      "url": "https://www.tresor.economie.gouv.fr/Articles/2026/06/25/appel-a-projets-fasep-2026-solutions-innovantes-pour-le-developpement-et-la-modernisation-des-systemes-de-sante",
+      "deadlines": [
+        {
+          "label": "Appel",
+          "date": null,
+          "statut": "a_surveiller"
+        }
+      ],
+      "tags": [],
+      "aires": []
+    },
+    {
+      "id": "horizon-miss-2027-02-cancer-02",
+      "nom": "Clinical research by Comprehensive Cancer Infrastructures for the benefit of patients with common cancers",
+      "organisme": "Commission européenne / Horizon Europe",
+      "niveau": "EU",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission.",
+      "cibles": [],
+      "budget_projet": "—",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-02",
+      "deadlines": [
+        {
+          "label": "HORIZON-MISS-2027-02-CANCER-02",
+          "date": "2027-09-16",
+          "statut": "ouvert",
+          "notes": "Clinical research by Comprehensive Cancer Infrastructures for the benefit of patients with common cancers"
+        }
+      ],
+      "tags": [],
+      "aires": [
+        "oncologie"
+      ]
+    },
+    {
+      "id": "horizon-miss-2027-02-cancer-04",
+      "nom": "Improving equitable health outcomes and added value for and with cancer patients through health-economics research, health systems research and outcomes research",
+      "organisme": "Commission européenne / Horizon Europe",
+      "niveau": "EU",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission.",
+      "cibles": [],
+      "budget_projet": "—",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-04",
+      "deadlines": [
+        {
+          "label": "HORIZON-MISS-2027-02-CANCER-04",
+          "date": "2027-09-16",
+          "statut": "ouvert",
+          "notes": "Improving equitable health outcomes and added value for and with cancer patients through health-economics research, health systems research and outcomes research"
+        }
+      ],
+      "tags": [],
+      "aires": [
+        "oncologie"
+      ]
+    },
+    {
+      "id": "horizon-hlth-2027-02-disease-14-two-stage",
+      "nom": "Clinical trials for advancing innovative interventions for neurodegenerative diseases",
+      "organisme": "Commission européenne / HaDEA",
+      "niveau": "EU",
+      "type": "À préciser",
+      "trl": "—",
+      "scope": "Appel ouvert. Call : Cluster 1 - Health (Two stage - 2027). Échéances : 2027-02-17, 2027-09-16.",
+      "cibles": [],
+      "budget_projet": "—",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-hlth-2027-02-disease-14-two-stage",
+      "deadlines": [
+        {
+          "label": "HORIZON-HLTH-2027-02-DISEASE-14-two-stage",
+          "date": "2027-02-17",
+          "statut": "ouvert",
+          "notes": "Clinical trials for advancing innovative interventions for neurodegenerative diseases"
+        }
+      ],
+      "tags": [],
+      "aires": [
+        "neuro"
+      ]
+    }
+  ],
+  "candidats": [
     {
       "id": "eu-horizon-hlth-2027-02-ind-02-two-stage",
       "kind": "nouveau",
@@ -417,19 +611,6 @@
       "description": "Appel ouvert. Call : Cluster 1 - Health (Two stage - 2027). Échéances : 2027-02-17, 2027-09-16."
     },
     {
-      "id": "eu-horizon-hlth-2027-03-tool-04",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
-      "nom": "Virtual Human Twins (VHTs) for integrated clinical decision support in prevention and diagnosis",
-      "organisme": "Commission européenne / HaDEA",
-      "niveau": "EU",
-      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-hlth-2027-03-tool-04",
-      "deadline": "2027-09-16",
-      "callId": "HORIZON-HLTH-2027-03-TOOL-04",
-      "description": "Appel à venir (pas encore ouvert). Call : Cluster 1 - Health (Single stage - 2027/2)."
-    },
-    {
       "id": "eu-horizon-hlth-2027-02-tool-01-two-stage",
       "kind": "nouveau",
       "source": "EU-FT",
@@ -441,97 +622,17 @@
       "deadline": "2027-02-17",
       "callId": "HORIZON-HLTH-2027-02-TOOL-01-two-stage",
       "description": "Appel ouvert. Call : Cluster 1 - Health (Two stage - 2027). Échéances : 2027-02-17, 2027-09-16."
-    },
-    {
-      "id": "eu-horizon-hlth-2027-03-tool-08",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
-      "nom": "Towards the next generation of frontier Artificial Intelligence models for healthcare",
-      "organisme": "Commission européenne / HaDEA",
-      "niveau": "EU",
-      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-hlth-2027-03-tool-08",
-      "deadline": "2027-09-16",
-      "callId": "HORIZON-HLTH-2027-03-TOOL-08",
-      "description": "Appel à venir (pas encore ouvert). Call : Cluster 1 - Health (Single stage - 2027/2)."
-    },
-    {
-      "id": "eu-horizon-miss-2027-02-cancer-03",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
-      "nom": "Phase 1 including first-in-human clinical trials to test biomarker-guided medicines or multi-modal treatment interventions for patients with rare or very rare cancers or cancer subtypes",
-      "organisme": "Commission européenne / Horizon Europe",
-      "niveau": "EU",
-      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-03",
-      "deadline": "2027-09-16",
-      "callId": "HORIZON-MISS-2027-02-CANCER-03",
-      "description": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission."
-    },
-    {
-      "id": "eu-horizon-eic-2026-accelerator-01",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
-      "nom": "EIC Accelerator 2026 - Short proposal",
-      "organisme": "Commission européenne / EIC",
-      "niveau": "EU",
-      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-eic-2026-accelerator-01",
-      "deadline": "2026-11-04",
-      "callId": "HORIZON-EIC-2026-ACCELERATOR-01",
-      "description": "Appel ouvert. Call : EIC Accelerator 2026 - Short application."
-    },
-    {
-      "id": "fasep-2026-sante",
-      "kind": "nouveau",
-      "source": "liens",
-      "detectedAt": "2026-11-02",
-      "nom": "FASEP 2026 — Solutions innovantes pour les systèmes de santé (export)",
-      "organisme": "DG Trésor / FASEP",
-      "niveau": "FR",
-      "url": "https://www.tresor.economie.gouv.fr/Articles/2026/06/25/appel-a-projets-fasep-2026-solutions-innovantes-pour-le-developpement-et-la-modernisation-des-systemes-de-sante",
-      "deadline": null,
-      "description": "Ajouté manuellement. Édition 2026 close le 30 sept. 2026 (résultats fin nov.), appel annuel. Démonstrateurs de solutions de santé innovantes dans des pays en développement (imagerie, IA, aide à la décision, télémédecine…), bénéficiaire public local, 200–500 k€, entreprise française (CA > 2 M€). Pharma et R&D exclus. Fenêtre de dépôt au fil de l'eau mentionnée."
-    },
-    {
-      "id": "eu-horizon-miss-2027-02-cancer-02",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
-      "nom": "Clinical research by Comprehensive Cancer Infrastructures for the benefit of patients with common cancers",
-      "organisme": "Commission européenne / Horizon Europe",
-      "niveau": "EU",
-      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-02",
-      "deadline": "2027-09-16",
-      "callId": "HORIZON-MISS-2027-02-CANCER-02",
-      "description": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission."
-    },
-    {
-      "id": "eu-horizon-miss-2027-02-cancer-04",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
-      "nom": "Improving equitable health outcomes and added value for and with cancer patients through health-economics research, health systems research and outcomes research",
-      "organisme": "Commission européenne / Horizon Europe",
-      "niveau": "EU",
-      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-04",
-      "deadline": "2027-09-16",
-      "callId": "HORIZON-MISS-2027-02-CANCER-04",
-      "description": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission."
-    },
-    {
-      "id": "eu-horizon-hlth-2027-02-disease-14-two-stage",
-      "kind": "nouveau",
-      "source": "EU-FT",
-      "detectedAt": "2026-11-02",
-      "nom": "Clinical trials for advancing innovative interventions for neurodegenerative diseases",
-      "organisme": "Commission européenne / HaDEA",
-      "niveau": "EU",
-      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-hlth-2027-02-disease-14-two-stage",
-      "deadline": "2027-02-17",
-      "callId": "HORIZON-HLTH-2027-02-DISEASE-14-two-stage",
-      "description": "Appel ouvert. Call : Cluster 1 - Health (Two stage - 2027). Échéances : 2027-02-17, 2027-09-16."
     }
   ],
-  "traites": []
+  "traites": [
+    "eu-horizon-miss-2027-02-cancer-05",
+    "eu-horizon-hlth-2027-03-tool-04",
+    "eu-horizon-hlth-2027-03-tool-08",
+    "eu-horizon-miss-2027-02-cancer-03",
+    "eu-horizon-eic-2026-accelerator-01",
+    "fasep-2026-sante",
+    "eu-horizon-miss-2027-02-cancer-02",
+    "eu-horizon-miss-2027-02-cancer-04",
+    "eu-horizon-hlth-2027-02-disease-14-two-stage"
+  ]
 }
