@@ -7,7 +7,7 @@
   "guichets": [
     {
       "id": "bpi-dm-implantable",
-      "nom": "AAP DM implantable & robotique chirurgicale",
+      "nom": "Grands Défis — Innovations de rupture DM implantable & robotique chirurgicale",
       "organisme": "Bpifrance / France 2030",
       "niveau": "FR",
       "type": "subvention",
@@ -18,19 +18,19 @@
         "ETI",
         "Consortia"
       ],
-      "budget_projet": "≥ 1 M€",
-      "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours",
+      "budget_projet": "> 4 M€ de dépenses éligibles",
+      "url": "https://www.picxel.bpifrance.fr/projets",
       "deadlines": [
         {
-          "label": "Vague 2026 — à confirmer",
-          "date": null,
-          "statut": "a_surveiller",
-          "notes": "Logique vagues périodiques — vérifier page BPI AAP"
+          "label": "Relève 1",
+          "date": "2026-02-10",
+          "statut": "ferme"
         },
         {
-          "label": "Deadline",
-          "date": null,
-          "statut": "ferme"
+          "label": "Relève 2 — clôture de l'AAP",
+          "date": "2026-10-06",
+          "statut": "ferme",
+          "notes": "Dernière relève : l'AAP est clos. Dépôt sur PICXEL. Porteur PME/ETI (individuel) ou consortium ≤ 6 partenaires mené par une entreprise. Surveiller une éventuelle nouvelle édition."
         }
       ],
       "tags": [
@@ -54,13 +54,13 @@
         "ETI"
       ],
       "budget_projet": "≥ 1 M€ (typiquement 2-3 M€)",
-      "url": "https://www.bpifrance.fr/nos-appels-a-projets-grands-defis-tiers-lieux-dexperimentation-medtech",
+      "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours",
       "deadlines": [
         {
-          "label": "Vague 2026 (fermée)",
+          "label": "Édition 2025 — clôture",
           "date": "2026-03-17",
           "statut": "ferme",
-          "notes": "Clôture passée — surveiller prochaine vague sur page BPI"
+          "notes": "AAP clos ; la page Bpifrance dédiée a été retirée. Aucune nouvelle édition annoncée à ce jour."
         }
       ],
       "tags": [
@@ -178,25 +178,25 @@
         "Groupements d'établissements"
       ],
       "budget_projet": "≥ 150 000 €",
-      "url": "https://www.anap.fr/s/article/appel-a-projets-achats-innovants",
+      "url": "https://demarche.numerique.gouv.fr/commencer/aap-achats-innovants-2026",
       "deadlines": [
         {
           "label": "Vague 1",
           "date": "2026-09-30",
-          "statut": "ouvert",
-          "notes": "Porteur obligatoire = établissement sanitaire ou médico-social. Budget min. 150 000 €, durée 12–24 mois. 5 domaines : diagnostic & clinique, bloc opératoire, parcours patient, RH/supports, transition écologique. Subvention directe ≤ 50% dépenses éligibles. Dépôt sur demarche.numerique.gouv.fr"
+          "statut": "ferme",
+          "notes": "Porteur obligatoire = établissement sanitaire ou médico-social. Budget min. 150 000 €, durée 12–24 mois. 5 domaines : diagnostic & clinique, bloc opératoire, parcours patient, RH/supports, transition écologique. Subvention directe ≤ 50% dépenses éligibles. Dépôt sur demarche.numerique.gouv.fr — Calendrier : instruction ANAP oct.–nov. 2026, auditions nov.–déc. 2026, lauréats janv.–févr. 2027. Contact : innovation@anap.fr"
         },
         {
           "label": "Vague 2",
           "date": null,
           "statut": "a_surveiller",
-          "notes": "Date non encore publiée — prévu 2027."
+          "notes": "Date, périmètre et financement précisés à l'ouverture de la vague (prévue 2027)."
         },
         {
           "label": "Vague 3",
           "date": null,
           "statut": "a_surveiller",
-          "notes": "Date non encore publiée — prévu 2028."
+          "notes": "Date, périmètre et financement précisés à l'ouverture de la vague (prévue 2028)."
         }
       ],
       "tags": [
