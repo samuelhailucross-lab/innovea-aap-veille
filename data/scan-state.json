@@ -13,7 +13,7 @@
       "checkedAt": "2026-11-02"
     },
     "https://sante.gouv.fr/professionnels/recherche-et-innovation/l-innovation-et-la-recherche-clinique/appels-a-projets/programmes-recherche": {
-      "hash": "ae748500e6c846fd",
+      "hash": "5f7acddf80e0bae1",
       "checkedAt": "2026-11-02"
     }
   },
@@ -30,26 +30,30 @@
       "https://www.bpifrance.fr/nos-appels-a-projets-concours/prenez-en-charge-le-parcours-de-formation-accelerateur-hauts-de-france-6-et-7-a-destination-des-petites-entreprises-pe"
     ]
   },
-  "lastRun": "2026-11-02T13:55:48.584Z",
-  "lastAdded": 24,
+  "lastRun": "2026-11-02T13:57:49.067Z",
+  "lastAdded": 25,
   "log": [
-    "EU « medical device » : 50 résultats, 18 retenus",
-    "EU « medical imaging » : 50 résultats, 1 retenus",
-    "EU « in vitro diagnostic » : 50 résultats, 0 retenus",
+    "EU « medical device » : 50 résultats, 6 retenus",
+    "EU « medical imaging » : 50 résultats, 6 retenus",
+    "EU « in vitro diagnostic » : 50 résultats, 4 retenus",
     "EU « diagnostics » : 24 résultats, 0 retenus",
     "EU « digital health » : 50 résultats, 0 retenus",
-    "EU « artificial intelligence health » : 50 résultats, 0 retenus",
-    "EU « health technologies » : 50 résultats, 3 retenus",
+    "EU « artificial intelligence health » : 50 résultats, 11 retenus",
+    "EU « health technologies » : 50 résultats, 0 retenus",
     "EU « radiopharmaceutical » : 0 résultats, 0 retenus",
     "EU « theranostics » : 0 résultats, 0 retenus",
-    "EU « HORIZON-HLTH » : 50 résultats, 1 retenus",
-    "EU « EU4H » : 1 résultats, 1 retenus",
-    "Page bpi-dm-implantable : empreinte initiale enregistrée",
+    "EU « HORIZON-HLTH » : 50 résultats, 0 retenus",
+    "EU « EU4H » : 1 résultats, 0 retenus",
+    "EU « EIC Accelerator » : 50 résultats, 2 retenus",
+    "EU « EIC Pathfinder » : 49 résultats, 0 retenus",
+    "EU « EIC Transition » : 50 résultats, 0 retenus",
+    "EU « Innovative Health Initiative » : 50 résultats, 1 retenus",
+    "Page bpi-dm-implantable : inchangée",
     "Page bpi-tiers-lieux : ERREUR HTTP 404",
-    "Page bpi-industrialisation-sante : empreinte initiale enregistrée",
-    "Page bpi-eval-medico-eco : empreinte initiale enregistrée",
-    "Page dgos-phrc : empreinte initiale enregistrée",
+    "Page bpi-industrialisation-sante : inchangée",
+    "Page bpi-eval-medico-eco : inchangée",
+    "Page dgos-phrc : MODIFIÉE",
     "Page anap-achats-innovants-2026 : ERREUR fetch failed",
-    "Liens Bpifrance — appels à projets et concours : 9 liens initiaux enregistrés"
+    "Liens Bpifrance — appels à projets et concours : 9 liens, 0 nouveaux pertinents"
   ]
 }
