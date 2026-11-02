@@ -43,6 +43,7 @@ const EU_SEARCHES = [
 // identifier, title or call mentions a MedTech term and no pharma/off-scope term.
 const ALWAYS = /^HORIZON-EIC-\d{4}-(ACCELERATOR|PATHFINDER|TRANSITION)|^HORIZON-JU-IHI/i
 const MEDTECH = /medical device|medtech|med-tech|imaging|diagnos|in vitro|point-of-care|radiolog|radiotherap|radiopharm|nuclear medicine|theranost|digital health|e-health|ehealth|health data|clinical decision|virtual human twin|artificial intelligence|\bAI\b|biomarker|monitoring|sensor|robot|telemedic|health technolog|healthcare system|hospital|procurement/i
+const HEALTH = /health|santé|medic|clinic|patient|hospital|diagnos|imaging|cancer|disease|care\b|healthcare|^HORIZON-HLTH|^HORIZON-MISS-\d{4}-\d{2}-CANCER|^EU4H/i
 const EXCLUDE = /antibod|antivir|antimicrob|vaccin|small molecule|monoclonal|operating grant|CBRN|protective gear|cell-free protein|bio-?printing|exposome|climate/i
 const STATUS_FORTHCOMING = '31094501'
 const STATUS_OPEN = '31094502'
@@ -146,7 +147,7 @@ async function scanEu(isKnown) {
         const title = stripHtml(first(m.title) || r.title || r.summary || id)
         const callTitle = stripHtml(first(m.callTitle) || '')
         const text = `${id} ${title} ${callTitle}`
-        if (!ALWAYS.test(id) && (EXCLUDE.test(text) || !MEDTECH.test(text))) continue
+        if (!ALWAYS.test(id) && (EXCLUDE.test(text) || !HEALTH.test(text) || !MEDTECH.test(text))) continue
         // Earliest deadline still to come (two-stage topics have two)
         const dates = (Array.isArray(m.deadlineDate) ? m.deadlineDate : [m.deadlineDate])
           .filter(Boolean)
@@ -198,8 +199,8 @@ async function scanPages(data, state) {
       }
       const h = sha(text)
       const prev = state.pages[g.url]
-      state.pages[g.url] = { hash: h, checkedAt: today }
-      if (!prev) {
+      state.pages[g.url] = { hash: h, checkedAt: today, text: text.slice(0, 20000) }
+      if (!prev || !prev.text) {
         note(`Page ${g.id} : empreinte initiale enregistrée`)
         continue
       }
@@ -207,7 +208,16 @@ async function scanPages(data, state) {
         note(`Page ${g.id} : inchangée`)
         continue
       }
-      note(`Page ${g.id} : MODIFIÉE`)
+      // Sentences present now but not before: shown to the reviewer.
+      const split = (t) => (t || '').split(/(?<=[.!?:;])\s+/).map((x) => x.trim()).filter((x) => x.length > 15)
+      const before = new Set(split(prev.text))
+      const added = split(text).filter((x) => !before.has(x))
+      if (prev.text && added.length === 0) {
+        note(`Page ${g.id} : changement mineur (ordre ou suppression), ignoré`)
+        continue
+      }
+      const snippet = added.slice(0, 3).map((x) => (x.length > 220 ? x.slice(0, 220) + '…' : x)).join(' / ')
+      note(`Page ${g.id} : MODIFIÉE — ${snippet.slice(0, 300)}`)
       const pending = (data.candidats || []).some((c) => c.kind === 'modifie' && c.guichetId === g.id)
       if (pending) continue
       out.push({
@@ -221,7 +231,9 @@ async function scanPages(data, state) {
         url: g.url,
         deadline: null,
         guichetId: g.id,
-        description: 'Le contenu de la page du guichet a changé depuis le dernier scan. Vérifier les dates et le statut.',
+        description: snippet
+          ? `Nouveau texte sur la page : « ${snippet} »`
+          : 'Le contenu de la page du guichet a changé depuis le dernier scan. Vérifier les dates et le statut.',
       })
     } catch (e) {
       note(`Page ${g.id} : ERREUR ${e.message}`)
