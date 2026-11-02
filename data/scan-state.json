@@ -1,0 +1,55 @@
+{
+  "pages": {
+    "https://www.bpifrance.fr/nos-appels-a-projets-concours": {
+      "hash": "47ddb22f614a28be",
+      "checkedAt": "2026-11-02"
+    },
+    "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-industrialisation-et-capacites-sante-2030": {
+      "hash": "78f78bc688c2998b",
+      "checkedAt": "2026-11-02"
+    },
+    "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-evaluation-du-benefice-medico-economique-des-dispositifs-medicaux-numeriques-et-des-dispositifs-medicaux-dequipement": {
+      "hash": "320c2bd84b333175",
+      "checkedAt": "2026-11-02"
+    },
+    "https://sante.gouv.fr/professionnels/recherche-et-innovation/l-innovation-et-la-recherche-clinique/appels-a-projets/programmes-recherche": {
+      "hash": "ae748500e6c846fd",
+      "checkedAt": "2026-11-02"
+    }
+  },
+  "links": {
+    "https://www.bpifrance.fr/nos-appels-a-projets-concours": [
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-coram-2025-2026",
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-decarbonation-des-navires-de-peche",
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-du-cluster-eureka-smart",
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-du-cluster-eureka-xecs",
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-eureka-france-japon",
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/appel-a-projets-france-allemagne",
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/innowwide-accelerer-votre-developpement-a-linternational",
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/multicap-croissance-ndeg4-mc4",
+      "https://www.bpifrance.fr/nos-appels-a-projets-concours/prenez-en-charge-le-parcours-de-formation-accelerateur-hauts-de-france-6-et-7-a-destination-des-petites-entreprises-pe"
+    ]
+  },
+  "lastRun": "2026-11-02T13:55:48.584Z",
+  "lastAdded": 24,
+  "log": [
+    "EU « medical device » : 50 résultats, 18 retenus",
+    "EU « medical imaging » : 50 résultats, 1 retenus",
+    "EU « in vitro diagnostic » : 50 résultats, 0 retenus",
+    "EU « diagnostics » : 24 résultats, 0 retenus",
+    "EU « digital health » : 50 résultats, 0 retenus",
+    "EU « artificial intelligence health » : 50 résultats, 0 retenus",
+    "EU « health technologies » : 50 résultats, 3 retenus",
+    "EU « radiopharmaceutical » : 0 résultats, 0 retenus",
+    "EU « theranostics » : 0 résultats, 0 retenus",
+    "EU « HORIZON-HLTH » : 50 résultats, 1 retenus",
+    "EU « EU4H » : 1 résultats, 1 retenus",
+    "Page bpi-dm-implantable : empreinte initiale enregistrée",
+    "Page bpi-tiers-lieux : ERREUR HTTP 404",
+    "Page bpi-industrialisation-sante : empreinte initiale enregistrée",
+    "Page bpi-eval-medico-eco : empreinte initiale enregistrée",
+    "Page dgos-phrc : empreinte initiale enregistrée",
+    "Page anap-achats-innovants-2026 : ERREUR fetch failed",
+    "Liens Bpifrance — appels à projets et concours : 9 liens initiaux enregistrés"
+  ]
+}
