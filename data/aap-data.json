@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastUpdated": "2026-04-29",
-    "updatedBy": "Samuel"
+    "lastUpdated": "2026-11-02",
+    "updatedBy": "Admin"
   },
   "guichets": [
     {
@@ -25,6 +25,11 @@
           "date": null,
           "statut": "a_surveiller",
           "notes": "Logique vagues périodiques — vérifier page BPI AAP"
+        },
+        {
+          "label": "Deadline",
+          "date": null,
+          "statut": "ferme"
         }
       ],
       "tags": [
