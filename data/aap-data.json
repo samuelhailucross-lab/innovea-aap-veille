@@ -480,6 +480,18 @@
       "deadline": "2026-11-04",
       "callId": "HORIZON-EIC-2026-ACCELERATOR-01",
       "description": "Appel ouvert. Call : EIC Accelerator 2026 - Short application."
+    },
+    {
+      "id": "fasep-2026-sante",
+      "kind": "nouveau",
+      "source": "liens",
+      "detectedAt": "2026-11-02",
+      "nom": "FASEP 2026 — Solutions innovantes pour les systèmes de santé (export)",
+      "organisme": "DG Trésor / FASEP",
+      "niveau": "FR",
+      "url": "https://www.tresor.economie.gouv.fr/Articles/2026/06/25/appel-a-projets-fasep-2026-solutions-innovantes-pour-le-developpement-et-la-modernisation-des-systemes-de-sante",
+      "deadline": null,
+      "description": "Ajouté manuellement. Édition 2026 close le 30 sept. 2026 (résultats fin nov.), appel annuel. Démonstrateurs de solutions de santé innovantes dans des pays en développement (imagerie, IA, aide à la décision, télémédecine…), bénéficiaire public local, 200–500 k€, entreprise française (CA > 2 M€). Pharma et R&D exclus. Fenêtre de dépôt au fil de l'eau mentionnée."
     }
   ],
   "traites": []

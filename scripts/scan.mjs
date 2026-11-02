@@ -38,11 +38,20 @@ const EU_SEARCHES = [
   'EIC Pathfinder',
   'EIC Transition',
   'Innovative Health Initiative',
+  // Therapeutic areas and device families
+  'oncology',
+  'cardiovascular',
+  'stroke',
+  'neurodegenerative',
+  'Alzheimer',
+  'implantable',
+  'surgical robotics',
+  'robotic surgery',
 ]
 // Kept: the EIC instruments and IHI topics always; otherwise a topic whose
 // identifier, title or call mentions a MedTech term and no pharma/off-scope term.
 const ALWAYS = /^HORIZON-EIC-\d{4}-(ACCELERATOR|PATHFINDER|TRANSITION)|^HORIZON-JU-IHI/i
-const MEDTECH = /medical device|medtech|med-tech|imaging|diagnos|in vitro|point-of-care|radiolog|radiotherap|radiopharm|nuclear medicine|theranost|digital health|e-health|ehealth|health data|clinical decision|virtual human twin|artificial intelligence|\bAI\b|biomarker|monitoring|sensor|robot|telemedic|health technolog|healthcare system|hospital|procurement/i
+const MEDTECH = /medical device|medtech|med-tech|imaging|diagnos|in vitro|point-of-care|radiolog|radiotherap|radiopharm|nuclear medicine|theranost|digital health|e-health|ehealth|health data|clinical decision|virtual human twin|artificial intelligence|\bAI\b|biomarker|monitoring|sensor|robot|telemedic|health technolog|healthcare system|hospital|procurement|oncolog|cancer|cardio|stroke|neurodegenerat|alzheimer|dementia|implant|surg|robotic/i
 const HEALTH = /health|santé|medic|clinic|patient|hospital|diagnos|imaging|cancer|disease|care\b|healthcare|^HORIZON-HLTH|^HORIZON-MISS-\d{4}-\d{2}-CANCER|^EU4H/i
 const EXCLUDE = /antibod|antivir|antimicrob|vaccin|small molecule|monoclonal|operating grant|CBRN|protective gear|cell-free protein|bio-?printing|exposome|climate/i
 const STATUS_FORTHCOMING = '31094501'
@@ -56,6 +65,13 @@ const LINK_WATCH = [
     url: 'https://www.bpifrance.fr/nos-appels-a-projets-concours',
     linkPattern: /\/nos-appels-a-projets-concours\/[a-z0-9-]{8,}/i,
     relevance: /sant|medic|dispositif|biomed|bio-|biotech|imagerie|diagnost|numerique|dmn|hopital|soin|ia-|intelligence-artificielle/i,
+  },
+  {
+    name: 'ANS — appels à projets e-santé',
+    organisme: 'Agence du Numérique en Santé (ANS)',
+    url: 'https://esante.gouv.fr/lagence/appels-a-projets',
+    linkPattern: /esante\.gouv\.fr\/.*appels?-(a-)?projets?|^\/.*appels?-(a-)?projets?/i,
+    relevance: /./,
   },
 ]
 
