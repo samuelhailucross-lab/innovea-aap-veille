@@ -1,7 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { FlatDeadline, Guichet } from '@/lib/types'
+import { FlatDeadline, Guichet, Statut } from '@/lib/types'
+import { AIRES, Aire, TRL_BANDS, TrlBand, trlMatches } from '@/lib/filters'
+
+const DEFAULT_STATUTS: Statut[] = ['ouvert', 'ouvert_continu', 'a_surveiller']
+const STATUT_FILTERS: { id: Statut; label: string }[] = [
+  { id: 'ouvert', label: 'Ouvert / date connue' },
+  { id: 'ouvert_continu', label: 'Ouvert en continu' },
+  { id: 'a_surveiller', label: 'À surveiller / prochaine vague' },
+  { id: 'ferme', label: 'Fermé' },
+]
+
+const labelStyle: React.CSSProperties = { fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600, display: 'block', marginBottom: 6 }
+const controlStyle: React.CSSProperties = { width: '100%', padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: 'white', color: '#374151' }
+const checkStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#374151', padding: '3px 0', cursor: 'pointer' }
 
 const STATUT_LABELS: Record<string, string> = {
   ouvert: 'Ouvert',
@@ -39,20 +52,42 @@ interface Props {
 
 export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, updatedBy }: Props) {
   const [filterNiveau, setFilterNiveau] = useState<'ALL' | 'FR' | 'EU'>('ALL')
-  const [filterStatut, setFilterStatut] = useState<'ALL' | 'ouvert' | 'ouvert_continu' | 'a_surveiller' | 'ferme'>('ALL')
+  const [filterTrl, setFilterTrl] = useState<TrlBand>('ALL')
+  const [filterAires, setFilterAires] = useState<Aire[]>([])
+  const [filterStatuts, setFilterStatuts] = useState<Statut[]>(DEFAULT_STATUTS)
   const [search, setSearch] = useState('')
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
+  const guichetDetails: Record<string, Guichet> = {}
+  for (const g of guichets) guichetDetails[g.id] = g
+
+  function toggle<T>(list: T[], v: T): T[] {
+    return list.includes(v) ? list.filter((x) => x !== v) : [...list, v]
+  }
+
+  function resetFilters() {
+    setFilterNiveau('ALL')
+    setFilterTrl('ALL')
+    setFilterAires([])
+    setFilterStatuts(DEFAULT_STATUTS)
+    setSearch('')
+  }
+
   const filtered = flatDeadlines.filter((d) => {
+    const g = guichetDetails[d.guichetId]
     if (filterNiveau !== 'ALL' && d.niveau !== filterNiveau) return false
-    if (filterStatut !== 'ALL' && d.deadline.statut !== filterStatut) return false
+    if (!filterStatuts.includes(d.deadline.statut)) return false
+    if (g && !trlMatches(g.trl, filterTrl)) return false
+    // A guichet without specific areas is transverse: it fits every area.
+    if (filterAires.length && g?.aires?.length && !filterAires.some((a) => g.aires!.includes(a))) return false
     if (search) {
       const q = search.toLowerCase()
-      if (
-        !d.guichetNom.toLowerCase().includes(q) &&
-        !d.organisme.toLowerCase().includes(q) &&
-        !d.deadline.label.toLowerCase().includes(q)
-      ) return false
+      const hay = [
+        d.guichetNom, d.organisme, d.deadline.label, d.deadline.notes,
+        g?.scope, g?.type, ...(g?.tags || []),
+        ...(g?.aires || []).map((a) => AIRES.find((x) => x.id === a)?.label),
+      ].filter(Boolean).join(' ').toLowerCase()
+      if (!hay.includes(q)) return false
     }
     return true
   })
@@ -60,9 +95,6 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
   const openCount = flatDeadlines.filter(d => d.deadline.statut === 'ouvert').length
   const urgentCount = flatDeadlines.filter(d => d.daysUntil !== null && d.daysUntil >= 0 && d.daysUntil <= 30).length
   const continuousCount = flatDeadlines.filter(d => d.deadline.statut === 'ouvert_continu').length
-
-  const guichetDetails: Record<string, Guichet> = {}
-  for (const g of guichets) guichetDetails[g.id] = g
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
@@ -83,7 +115,7 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
         </div>
       </div>
 
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '28px 24px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '28px 24px' }}>
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 28 }}>
           {[
@@ -98,47 +130,63 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
           ))}
         </div>
 
-        {/* Filters */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
-          <input
-            type="text"
-            placeholder="Rechercher un guichet..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ flex: 1, minWidth: 200, padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: 'white' }}
-          />
-          <div style={{ display: 'flex', gap: 6 }}>
-            {(['ALL', 'FR', 'EU'] as const).map((n) => (
-              <button
-                key={n}
-                onClick={() => setFilterNiveau(n)}
-                style={{
-                  padding: '7px 14px', borderRadius: 7, fontSize: 13, border: '1px solid',
-                  borderColor: filterNiveau === n ? '#1d4ed8' : '#e5e7eb',
-                  background: filterNiveau === n ? '#1d4ed8' : 'white',
-                  color: filterNiveau === n ? 'white' : '#374151',
-                  fontWeight: filterNiveau === n ? 600 : 400,
-                }}
-              >
-                {n === 'ALL' ? 'Tous niveaux' : n}
-              </button>
+        <style>{`
+          .aap-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: start; }
+          .aap-sidebar { position: sticky; top: 16px; }
+          @media (max-width: 860px) {
+            .aap-layout { grid-template-columns: 1fr; }
+            .aap-sidebar { position: static; }
+          }
+        `}</style>
+        <div className="aap-layout">
+        <aside className="aap-sidebar" style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: 12, padding: '18px 16px', display: 'grid', gap: 18 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#111827', letterSpacing: '0.04em' }}>FILTRES</div>
+          <div>
+            <label style={labelStyle} htmlFor="f-search">Recherche</label>
+            <input id="f-search" type="search" placeholder="robotique, cardio, imagerie…" value={search} onChange={(e) => setSearch(e.target.value)} style={controlStyle} />
+          </div>
+          <div>
+            <label style={labelStyle} htmlFor="f-niveau">Périmètre</label>
+            <select id="f-niveau" value={filterNiveau} onChange={(e) => setFilterNiveau(e.target.value as any)} style={controlStyle}>
+              <option value="ALL">Tous</option>
+              <option value="FR">France</option>
+              <option value="EU">Europe</option>
+            </select>
+          </div>
+          <div>
+            <label style={labelStyle} htmlFor="f-trl">TRL</label>
+            <select id="f-trl" value={filterTrl} onChange={(e) => setFilterTrl(e.target.value as TrlBand)} style={controlStyle}>
+              {TRL_BANDS.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
+            </select>
+          </div>
+          <div>
+            <span style={labelStyle}>Aires thérapeutiques</span>
+            {AIRES.map((a) => (
+              <label key={a.id} style={checkStyle}>
+                <input type="checkbox" checked={filterAires.includes(a.id)} onChange={() => setFilterAires(toggle(filterAires, a.id))} />
+                {a.label}
+              </label>
+            ))}
+            <p style={{ fontSize: 11, color: '#9ca3af', margin: '6px 0 0' }}>Les guichets transverses restent affichés.</p>
+          </div>
+          <div>
+            <span style={labelStyle}>Statut</span>
+            {STATUT_FILTERS.map((st) => (
+              <label key={st.id} style={checkStyle}>
+                <input type="checkbox" checked={filterStatuts.includes(st.id)} onChange={() => setFilterStatuts(toggle(filterStatuts, st.id))} />
+                {st.label}
+              </label>
             ))}
           </div>
-          <select
-            value={filterStatut}
-            onChange={(e) => setFilterStatut(e.target.value as any)}
-            style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, background: 'white', color: '#374151' }}
-          >
-            <option value="ALL">Tous statuts</option>
-            <option value="ouvert">Ouvert</option>
-            <option value="ouvert_continu">Continu</option>
-            <option value="a_surveiller">À surveiller</option>
-            <option value="ferme">Fermé</option>
-          </select>
-        </div>
+          <button onClick={resetFilters} style={{ background: '#f3f4f6', color: '#374151', border: '1px solid #e5e7eb', padding: '8px 12px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+            Réinitialiser
+          </button>
+        </aside>
 
+        <div style={{ minWidth: 0 }}>
+        <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 10px' }}>{filtered.length} échéance(s) affichée(s)</p>
         {/* Table */}
-        <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+        <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
@@ -237,6 +285,11 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
                             >
                               Accéder au guichet →
                             </a>
+                            {(guichet.aires || []).map((a) => (
+                              <span key={a} style={{ background: '#ecfeff', color: '#0e7490', padding: '5px 10px', borderRadius: 5, fontSize: 12 }}>
+                                {AIRES.find((x) => x.id === a)?.label}
+                              </span>
+                            ))}
                             {guichet.tags.map((t) => (
                               <span key={t} style={{ background: '#f1f5f9', color: '#64748b', padding: '5px 10px', borderRadius: 5, fontSize: 12 }}>
                                 {t}
@@ -251,6 +304,9 @@ export default function DashboardClient({ flatDeadlines, guichets, lastUpdated, 
               })}
             </tbody>
           </table>
+        </div>
+
+        </div>
         </div>
 
         <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 16, textAlign: 'right' }}>

@@ -26,6 +26,7 @@ export interface Guichet {
   url: string
   deadlines: Deadline[]
   tags: string[]
+  aires?: ('oncologie' | 'cardiologie' | 'stroke' | 'neuro')[] // empty or absent = transverse (all areas)
 }
 
 // A call or a page change found by the weekly scanner, waiting for review in /admin.

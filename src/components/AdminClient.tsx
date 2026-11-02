@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { AapData, Guichet, Deadline, Candidat } from '@/lib/types'
+import { AIRES, Aire, inferAires } from '@/lib/filters'
 
 interface Props {
   data: AapData
@@ -68,6 +69,7 @@ export default function AdminClient({ data }: Props) {
         url: c.url,
         deadlines: [deadline],
         tags: [],
+        aires: inferAires(`${c.nom} ${c.description || ''}`),
       }
       setGuichets((gs) => [...gs, g])
     }
@@ -86,6 +88,16 @@ export default function AdminClient({ data }: Props) {
               ),
             }
       )
+    )
+  }
+
+  function toggleAire(guichetId: string, aire: Aire) {
+    setGuichets((gs) =>
+      gs.map((g) => {
+        if (g.id !== guichetId) return g
+        const cur = g.aires || []
+        return { ...g, aires: cur.includes(aire) ? cur.filter((a) => a !== aire) : [...cur, aire] }
+      })
     )
   }
 
@@ -267,6 +279,18 @@ export default function AdminClient({ data }: Props) {
 
             {editingId === g.id && (
               <div style={{ padding: '20px' }}>
+                <h3 style={{ fontSize: 13, color: '#6b7280', margin: '0 0 8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Aires thérapeutiques</h3>
+                <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 6 }}>
+                  {AIRES.map((a) => (
+                    <label key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#374151', cursor: 'pointer' }}>
+                      <input type="checkbox" checked={(g.aires || []).includes(a.id)} onChange={() => toggleAire(g.id, a.id)} />
+                      {a.label}
+                    </label>
+                  ))}
+                </div>
+                <p style={{ fontSize: 11, color: '#9ca3af', margin: '0 0 18px' }}>
+                  Aucune case cochée = guichet transverse, affiché pour toutes les aires.
+                </p>
                 <h3 style={{ fontSize: 13, color: '#6b7280', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Deadlines</h3>
 
                 {g.deadlines.map((dl, i) => (
