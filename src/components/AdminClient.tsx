@@ -33,6 +33,12 @@ function slugify(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)
 }
 
+function isSoon(d: string | null | undefined): boolean {
+  if (!d) return false
+  const days = (parseISO(d).getTime() - Date.now()) / 86400000
+  return days > -1 && days <= 30
+}
+
 function formatDate(d: string | null | undefined, pattern = 'd MMM yyyy'): string {
   if (!d) return ''
   const p = parseISO(d)
@@ -56,14 +62,16 @@ const CSS = `
 .adm-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .adm-section-head h2 { margin: 0; font-size: 18px; font-weight: 600; }
 .adm-section-head p { margin: 0; font-size: 13px; color: var(--muted); }
-.adm-count { display: inline-block; min-width: 22px; padding: 0 7px; margin-left: 6px; border-radius: 999px; background: var(--orange); color: #fff; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; vertical-align: 2px; }
+.adm-count { display: inline-block; min-width: 22px; padding: 0 7px; margin-left: 6px; border-radius: 999px; background: var(--petrol-deep); color: #fff; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; vertical-align: 2px; }
 
 .adm-queue { display: grid; gap: 10px; }
-.adm-cand { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--orange); border-radius: 8px; padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 16px; }
-.adm-cand.is-change { border-left-color: var(--petrol); }
+.adm-cand { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--petrol); border-radius: 8px; padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 16px; }
+.adm-cand.is-change { border-left-color: #9FB2B3; }
+.adm-cand.is-urgent { border-left-color: var(--orange); }
 .adm-cand-name { font-weight: 600; font-size: 15px; }
 .adm-cand-meta { font-size: 13px; color: var(--muted); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 6px 12px; }
-.adm-cand-meta strong { color: var(--orange-text); font-weight: 600; }
+.adm-cand-meta strong { color: var(--ink); font-weight: 600; }
+.adm-cand.is-urgent .adm-cand-meta strong { color: var(--orange-text); }
 .adm-cand-desc { font-size: 13px; margin: 8px 0 0; }
 .adm-cand-src { font-size: 12px; color: var(--muted); margin-top: 8px; }
 .adm-cand-src a { color: var(--petrol-deep); font-weight: 600; }
@@ -310,7 +318,7 @@ export default function AdminClient({ data }: Props) {
           ) : (
             <div className="adm-queue">
               {candidats.map((c) => (
-                <article key={c.id} className={`adm-cand${c.kind === 'modifie' ? ' is-change' : ''}`}>
+                <article key={c.id} className={`adm-cand${c.kind === 'modifie' ? ' is-change' : ''}${isSoon(c.deadline) ? ' is-urgent' : ''}`}>
                   <div style={{ minWidth: 0 }}>
                     <div className="adm-cand-name">{c.nom}</div>
                     <div className="adm-cand-meta">
