@@ -492,6 +492,71 @@
       "url": "https://www.tresor.economie.gouv.fr/Articles/2026/06/25/appel-a-projets-fasep-2026-solutions-innovantes-pour-le-developpement-et-la-modernisation-des-systemes-de-sante",
       "deadline": null,
       "description": "Ajouté manuellement. Édition 2026 close le 30 sept. 2026 (résultats fin nov.), appel annuel. Démonstrateurs de solutions de santé innovantes dans des pays en développement (imagerie, IA, aide à la décision, télémédecine…), bénéficiaire public local, 200–500 k€, entreprise française (CA > 2 M€). Pharma et R&D exclus. Fenêtre de dépôt au fil de l'eau mentionnée."
+    },
+    {
+      "id": "eu-horizon-miss-2027-02-cancer-02",
+      "kind": "nouveau",
+      "source": "EU-FT",
+      "detectedAt": "2026-11-02",
+      "nom": "Clinical research by Comprehensive Cancer Infrastructures for the benefit of patients with common cancers",
+      "organisme": "Commission européenne / Horizon Europe",
+      "niveau": "EU",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-02",
+      "deadline": "2027-09-16",
+      "callId": "HORIZON-MISS-2027-02-CANCER-02",
+      "description": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission."
+    },
+    {
+      "id": "eu-horizon-miss-2027-02-cancer-04",
+      "kind": "nouveau",
+      "source": "EU-FT",
+      "detectedAt": "2026-11-02",
+      "nom": "Improving equitable health outcomes and added value for and with cancer patients through health-economics research, health systems research and outcomes research",
+      "organisme": "Commission européenne / Horizon Europe",
+      "niveau": "EU",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-02-cancer-04",
+      "deadline": "2027-09-16",
+      "callId": "HORIZON-MISS-2027-02-CANCER-04",
+      "description": "Appel à venir (pas encore ouvert). Call : Supporting the implementation of the Cancer Mission."
+    },
+    {
+      "id": "eu-horizon-hlth-2027-02-disease-14-two-stage",
+      "kind": "nouveau",
+      "source": "EU-FT",
+      "detectedAt": "2026-11-02",
+      "nom": "Clinical trials for advancing innovative interventions for neurodegenerative diseases",
+      "organisme": "Commission européenne / HaDEA",
+      "niveau": "EU",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-hlth-2027-02-disease-14-two-stage",
+      "deadline": "2027-02-17",
+      "callId": "HORIZON-HLTH-2027-02-DISEASE-14-two-stage",
+      "description": "Appel ouvert. Call : Cluster 1 - Health (Two stage - 2027). Échéances : 2027-02-17, 2027-09-16."
+    },
+    {
+      "id": "eu-horizon-miss-2027-06-soil-cancer",
+      "kind": "nouveau",
+      "source": "EU-FT",
+      "detectedAt": "2026-11-02",
+      "nom": "Living labs to monitor and mitigate carcinogenic substances in and originating from soils: Evaluating their effects on human cancer risks",
+      "organisme": "Commission européenne / Horizon Europe",
+      "niveau": "EU",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-miss-2027-06-soil-cancer",
+      "deadline": "2027-09-21",
+      "callId": "HORIZON-MISS-2027-06-SOIL-CANCER",
+      "description": "Appel à venir (pas encore ouvert). Call : Joint Call between the Soil Deal for Europe Mission and the Cancer Mission."
+    },
+    {
+      "id": "page-dgos-phrc-2026-11-02",
+      "kind": "modifie",
+      "source": "page",
+      "detectedAt": "2026-11-02",
+      "nom": "Page modifiée : PHRC-N / PHRIP / PREPS / PRME",
+      "organisme": "DGOS / Ministère de la Santé",
+      "niveau": "FR",
+      "url": "https://sante.gouv.fr/professionnels/recherche-et-innovation/l-innovation-et-la-recherche-clinique/appels-a-projets/programmes-recherche",
+      "deadline": null,
+      "guichetId": "dgos-phrc",
+      "description": "Nouveau texte sur la page : « 2042403061481166207 »"
     }
   ],
   "traites": []
