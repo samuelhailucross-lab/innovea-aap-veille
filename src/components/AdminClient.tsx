@@ -75,14 +75,23 @@ export default function AdminClient({ data }: Props) {
       },
       guichets,
     }
-    await fetch('/api/save', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+    try {
+      const res = await fetch('/api/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || `Erreur ${res.status}`)
+      }
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (e: any) {
+      alert(`Échec de la sauvegarde : ${e.message}`)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
