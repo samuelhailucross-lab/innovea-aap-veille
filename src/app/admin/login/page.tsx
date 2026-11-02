@@ -29,38 +29,52 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
-      <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '40px', width: '100%', maxWidth: 380 }}>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 8px', color: '#111827' }}>Accès admin</h1>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 28px' }}>INNOVÉA · AAP MedTech Veille</p>
-
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', fontSize: 13, color: '#374151', marginBottom: 6, fontWeight: 500 }}>
-              Mot de passe
-            </label>
+    <div className="login">
+      <style>{`
+        .login { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
+        .login-header { background: var(--petrol-deep); color: #fff; padding: 22px 24px 20px; }
+        .login-header p { margin: 0 0 2px; font-size: 13px; color: #A9DADA; }
+        .login-header h1 { margin: 0; font-size: 20px; font-weight: 600; }
+        .login-body { display: flex; align-items: flex-start; justify-content: center; padding: 64px 16px; }
+        .login-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 28px; width: 100%; max-width: 380px; }
+        .login-card h2 { margin: 0 0 4px; font-size: 18px; font-weight: 600; }
+        .login-card > p { margin: 0 0 22px; font-size: 14px; color: var(--muted); }
+        .login-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .login-input { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 6px; font-size: 15px; background: var(--surface); color: var(--ink); }
+        .login-input:focus { border-color: var(--petrol); outline: none; box-shadow: 0 0 0 3px var(--petrol-tint); }
+        .login-error { font-size: 13px; color: #A3261A; margin: 10px 0 0; }
+        .login-btn { width: 100%; margin-top: 18px; padding: 10px; background: var(--petrol); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; }
+        .login-btn:hover { background: var(--petrol-deep); }
+        .login-btn:disabled { opacity: 0.7; }
+        .login-back { display: inline-block; margin-top: 16px; font-size: 13px; color: var(--petrol-deep); font-weight: 600; }
+      `}</style>
+      <header className="login-header">
+        <p>INNOVÉA, Siemens Healthineers France</p>
+        <h1>Veille des appels à projets MedTech</h1>
+      </header>
+      <div className="login-body">
+        <div className="login-card">
+          <h2>Accès administration</h2>
+          <p>Pour valider les appels détectés et mettre à jour les échéances.</p>
+          <form onSubmit={handleSubmit}>
+            <label className="login-label" htmlFor="password">Mot de passe</label>
             <input
+              id="password"
+              className="login-input"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
               required
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 14, outline: 'none' }}
+              autoFocus
             />
-          </div>
-
-          {error && (
-            <p style={{ fontSize: 13, color: '#dc2626', marginBottom: 16 }}>{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={{ width: '100%', padding: '10px', background: '#1e3a8a', color: 'white', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 500, opacity: loading ? 0.7 : 1 }}
-          >
-            {loading ? 'Connexion…' : 'Se connecter'}
-          </button>
-        </form>
+            {error && <p className="login-error" role="alert">{error}</p>}
+            <button type="submit" className="login-btn" disabled={loading}>
+              {loading ? 'Connexion…' : 'Se connecter'}
+            </button>
+          </form>
+          <a href="/" className="login-back">Retour au dashboard</a>
+        </div>
       </div>
     </div>
   )

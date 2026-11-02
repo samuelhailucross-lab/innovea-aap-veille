@@ -1,14 +1,27 @@
 'use client'
 
-import { useState } from 'react'
-import { AapData, Guichet, Deadline, Candidat } from '@/lib/types'
+import { useEffect, useMemo, useState } from 'react'
+import { format, parseISO, isValid } from 'date-fns'
+import { fr } from 'date-fns/locale'
+import { AapData, Guichet, Deadline, Candidat, Statut } from '@/lib/types'
 import { AIRES, Aire, inferAires } from '@/lib/filters'
 
 interface Props {
   data: AapData
 }
 
-const STATUT_OPTIONS = ['ouvert', 'ouvert_continu', 'a_surveiller', 'ferme'] as const
+const STATUT_OPTIONS: { id: Statut; label: string }[] = [
+  { id: 'ouvert', label: 'Ouvert' },
+  { id: 'ouvert_continu', label: 'En continu' },
+  { id: 'a_surveiller', label: 'À surveiller' },
+  { id: 'ferme', label: 'Fermé' },
+]
+
+const SOURCE_LABELS: Record<Candidat['source'], string> = {
+  'EU-FT': 'Portail Funding & Tenders (UE)',
+  page: 'Page du guichet modifiée',
+  liens: 'Nouveau lien détecté',
+}
 
 function isExpired(dl: Deadline): boolean {
   if (dl.statut !== 'ouvert' || !dl.date) return false
@@ -17,25 +30,130 @@ function isExpired(dl: Deadline): boolean {
 }
 
 function slugify(s: string): string {
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)
 }
 
-const SOURCE_LABELS: Record<Candidat['source'], string> = {
-  'EU-FT': 'Portail Funding & Tenders (UE)',
-  page: 'Page du guichet modifiée',
-  liens: 'Nouveau lien détecté',
+function formatDate(d: string | null | undefined, pattern = 'd MMM yyyy'): string {
+  if (!d) return ''
+  const p = parseISO(d)
+  return isValid(p) ? format(p, pattern, { locale: fr }) : d
 }
+
+const EMPTY_DEADLINE: Deadline = { label: '', date: '', statut: 'ouvert', notes: '' }
+
+const CSS = `
+.adm { min-height: 100vh; padding-bottom: 96px; }
+.adm-header { background: var(--petrol-deep); color: #fff; }
+.adm-header-inner { max-width: 960px; margin: 0 auto; padding: 22px 24px 20px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.adm-owner { margin: 0 0 2px; font-size: 13px; color: #A9DADA; }
+.adm-title { margin: 0; font-size: 24px; line-height: 1.2; font-weight: 600; letter-spacing: -0.01em; }
+.adm-back { color: #fff; text-decoration: none; font-weight: 600; font-size: 13px; padding: 7px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.35); }
+.adm-back:hover { background: rgba(255,255,255,0.1); }
+
+.adm-main { max-width: 960px; margin: 0 auto; padding: 24px; display: grid; gap: 32px; }
+.adm-intro { margin: 0; font-size: 14px; color: var(--muted); max-width: 70ch; }
+
+.adm-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.adm-section-head h2 { margin: 0; font-size: 18px; font-weight: 600; }
+.adm-section-head p { margin: 0; font-size: 13px; color: var(--muted); }
+.adm-count { display: inline-block; min-width: 22px; padding: 0 7px; margin-left: 6px; border-radius: 999px; background: var(--orange); color: #fff; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; vertical-align: 2px; }
+
+.adm-queue { display: grid; gap: 10px; }
+.adm-cand { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--orange); border-radius: 8px; padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 16px; }
+.adm-cand.is-change { border-left-color: var(--petrol); }
+.adm-cand-name { font-weight: 600; font-size: 15px; }
+.adm-cand-meta { font-size: 13px; color: var(--muted); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.adm-cand-meta strong { color: var(--orange-text); font-weight: 600; }
+.adm-cand-desc { font-size: 13px; margin: 8px 0 0; }
+.adm-cand-src { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.adm-cand-src a { color: var(--petrol-deep); font-weight: 600; }
+.adm-cand-actions { display: grid; gap: 6px; align-content: start; }
+.adm-empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 18px 16px; font-size: 14px; color: var(--muted); }
+
+.adm-btn { font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 6px; border: 1px solid transparent; }
+.adm-btn.primary { background: var(--petrol); color: #fff; }
+.adm-btn.primary:hover { background: var(--petrol-deep); }
+.adm-btn.secondary { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.adm-btn.secondary:hover { border-color: #B9C7C8; }
+.adm-btn.danger { background: var(--surface); color: #A3261A; border-color: #F0CFCB; }
+.adm-btn.danger:hover { background: #FBF0EF; }
+.adm-btn.link { background: none; border: none; padding: 0; color: var(--petrol-deep); text-decoration: underline; text-underline-offset: 3px; }
+.adm-btn:disabled { opacity: 0.6; cursor: default; }
+
+.adm-control { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; font-size: 14px; background: var(--surface); color: var(--ink); }
+.adm-control:focus { border-color: var(--petrol); outline: none; box-shadow: 0 0 0 3px var(--petrol-tint); }
+.adm-label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+
+.adm-list { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.adm-g { border-top: 1px solid var(--line); }
+.adm-g:first-child { border-top: none; }
+.adm-g-head { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; background: none; border: none; text-align: left; color: inherit; font: inherit; }
+.adm-g-head:hover { background: #F8FBFB; }
+.adm-g-name { font-weight: 600; font-size: 15px; }
+.adm-g-sub { font-size: 13px; color: var(--muted); margin-top: 2px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.adm-niveau { font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); color: var(--ink); background: var(--bg); }
+.adm-chevron { color: var(--muted); font-size: 13px; transition: transform .15s; flex-shrink: 0; }
+.adm-g.is-open .adm-chevron { transform: rotate(180deg); }
+.adm-g-body { padding: 4px 16px 20px; background: #F8FBFB; border-top: 1px solid var(--line); }
+.adm-block { margin-top: 16px; }
+.adm-block h3 { margin: 0 0 8px; font-size: 14px; font-weight: 600; }
+.adm-aires { display: flex; gap: 6px 18px; flex-wrap: wrap; }
+.adm-check { display: flex; align-items: center; gap: 7px; font-size: 14px; cursor: pointer; }
+.adm-check input { accent-color: var(--petrol); width: 15px; height: 15px; margin: 0; }
+.adm-hint { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+
+.adm-dl { display: grid; grid-template-columns: minmax(0, 1.3fr) 150px 140px minmax(0, 1.4fr) 34px; gap: 8px; align-items: start; margin-bottom: 10px; }
+.adm-dl-new { background: var(--surface); border: 1px dashed #B9C7C8; border-radius: 8px; padding: 12px; margin-top: 4px; }
+.adm-remove { width: 34px; height: 34px; margin-top: 20px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: 16px; line-height: 1; }
+.adm-remove:hover { color: #A3261A; border-color: #F0CFCB; }
+.adm-expired { font-size: 11px; color: var(--muted); display: block; margin-top: 3px; }
+.adm-foot-note { font-size: 12px; color: var(--muted); margin: 18px 0 0; }
+
+.adm-bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -4px 16px rgba(23,41,43,0.06); z-index: 10; }
+.adm-bar-inner { max-width: 960px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.adm-bar-status { font-size: 14px; color: var(--muted); }
+.adm-bar-status.is-dirty { color: var(--orange-text); font-weight: 600; }
+.adm-bar-status.is-ok { color: var(--petrol-deep); font-weight: 600; }
+.adm-bar-status.is-error { color: #A3261A; font-weight: 600; }
+.adm-save { font-size: 14px; padding: 9px 18px; }
+
+@media (max-width: 760px) {
+  .adm-cand { grid-template-columns: 1fr; }
+  .adm-dl { grid-template-columns: 1fr 1fr; }
+  .adm-dl > .adm-dl-label, .adm-dl > .adm-dl-notes { grid-column: 1 / -1; }
+  .adm-remove { margin-top: 0; }
+  .adm-main { padding: 16px; }
+  .adm-header-inner, .adm-bar-inner { padding-left: 16px; padding-right: 16px; }
+  .adm-title { font-size: 20px; }
+}
+`
 
 export default function AdminClient({ data }: Props) {
   const [guichets, setGuichets] = useState<Guichet[]>(data.guichets)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [showAddDeadline, setShowAddDeadline] = useState<string | null>(null)
-  const [newDeadline, setNewDeadline] = useState<Partial<Deadline>>({ label: '', date: '', statut: 'ouvert', notes: '' })
   const [candidats, setCandidats] = useState<Candidat[]>(data.candidats || [])
   const [traites, setTraites] = useState<string[]>(data.traites || [])
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [showAddDeadline, setShowAddDeadline] = useState<string | null>(null)
+  const [newDeadline, setNewDeadline] = useState<Deadline>(EMPTY_DEADLINE)
   const [cibleGuichet, setCibleGuichet] = useState<Record<string, string>>({})
+  const [saving, setSaving] = useState(false)
+  const [savedAt, setSavedAt] = useState<string | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
+
+  const snapshot = (gs: Guichet[], cs: Candidat[], ts: string[]) => JSON.stringify({ gs, cs, ts })
+  const [savedSnapshot, setSavedSnapshot] = useState(() => snapshot(data.guichets, data.candidats || [], data.traites || []))
+  const current = useMemo(() => snapshot(guichets, candidats, traites), [guichets, candidats, traites])
+  const dirty = current !== savedSnapshot
+
+  useEffect(() => {
+    if (!dirty) return
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [dirty])
 
   function closeCandidat(c: Candidat) {
     setCandidats((cs) => cs.filter((x) => x.id !== c.id))
@@ -51,7 +169,6 @@ export default function AdminClient({ data }: Props) {
     }
     const target = cibleGuichet[c.id]
     if (target) {
-      // Add as a new deadline on an existing guichet
       setGuichets((gs) => gs.map((g) => (g.id !== target ? g : { ...g, deadlines: [...g.deadlines, deadline] })))
     } else {
       let id = slugify(c.callId || c.nom) || c.id
@@ -81,12 +198,7 @@ export default function AdminClient({ data }: Props) {
       gs.map((g) =>
         g.id !== guichetId
           ? g
-          : {
-              ...g,
-              deadlines: g.deadlines.map((dl, i) =>
-                i !== dlIndex ? dl : { ...dl, [field]: value || null }
-              ),
-            }
+          : { ...g, deadlines: g.deadlines.map((dl, i) => (i !== dlIndex ? dl : { ...dl, [field]: value || null })) }
       )
     )
   }
@@ -102,13 +214,7 @@ export default function AdminClient({ data }: Props) {
   }
 
   function removeDeadline(guichetId: string, dlIndex: number) {
-    setGuichets((gs) =>
-      gs.map((g) =>
-        g.id !== guichetId
-          ? g
-          : { ...g, deadlines: g.deadlines.filter((_, i) => i !== dlIndex) }
-      )
-    )
+    setGuichets((gs) => gs.map((g) => (g.id !== guichetId ? g : { ...g, deadlines: g.deadlines.filter((_, i) => i !== dlIndex) })))
   }
 
   function addDeadline(guichetId: string) {
@@ -121,22 +227,18 @@ export default function AdminClient({ data }: Props) {
               ...g,
               deadlines: [
                 ...g.deadlines,
-                {
-                  label: newDeadline.label!,
-                  date: newDeadline.date || null,
-                  statut: (newDeadline.statut as any) || 'ouvert',
-                  notes: newDeadline.notes || undefined,
-                },
+                { label: newDeadline.label, date: newDeadline.date || null, statut: newDeadline.statut, notes: newDeadline.notes || undefined },
               ],
             }
       )
     )
     setShowAddDeadline(null)
-    setNewDeadline({ label: '', date: '', statut: 'ouvert', notes: '' })
+    setNewDeadline(EMPTY_DEADLINE)
   }
 
   async function saveAll() {
     setSaving(true)
+    setSaveError(null)
     const payload: AapData = {
       meta: {
         lastUpdated: new Date().toISOString().split('T')[0],
@@ -157,226 +259,228 @@ export default function AdminClient({ data }: Props) {
         const body = await res.json().catch(() => ({}))
         throw new Error(body.error || `Erreur ${res.status}`)
       }
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
+      setSavedSnapshot(current)
+      setSavedAt(format(new Date(), 'HH:mm'))
     } catch (e: any) {
-      alert(`Échec de la sauvegarde : ${e.message}`)
+      setSaveError(e.message)
     } finally {
       setSaving(false)
     }
   }
 
-  return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
-      <div style={{ background: '#1e3a8a', padding: '20px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <p style={{ color: '#93c5fd', fontSize: 11, margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>INNOVÉA — Admin</p>
-          <h1 style={{ color: 'white', fontSize: 20, margin: 0, fontWeight: 600 }}>Gestion des guichets AAP</h1>
-        </div>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <a href="/" style={{ color: '#93c5fd', fontSize: 13, textDecoration: 'none', padding: '7px 14px', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 6 }}>
-            ← Dashboard
-          </a>
-          <button
-            onClick={saveAll}
-            disabled={saving}
-            style={{ background: saved ? '#15803d' : '#f59e0b', color: 'white', border: 'none', padding: '8px 18px', borderRadius: 7, fontSize: 14, fontWeight: 600, opacity: saving ? 0.7 : 1 }}
-          >
-            {saving ? 'Sauvegarde…' : saved ? '✓ Sauvegardé' : 'Sauvegarder'}
-          </button>
-        </div>
-      </div>
+  let barStatus: { text: string; cls: string }
+  if (saveError) barStatus = { text: `Échec de l'enregistrement : ${saveError}`, cls: 'is-error' }
+  else if (dirty) barStatus = { text: 'Modifications non enregistrées', cls: 'is-dirty' }
+  else if (savedAt) barStatus = { text: `Enregistré à ${savedAt}. Le dashboard sera à jour dans environ une minute.`, cls: 'is-ok' }
+  else barStatus = { text: 'Aucune modification en cours', cls: '' }
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '28px 24px' }}>
-        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 24 }}>
-          « Sauvegarder » publie les modifications sur GitHub ; le dashboard est mis à jour environ 1 minute plus tard.
-          {data.meta.lastScan && <> Dernier scan automatique : {data.meta.lastScan}.</>}
+  const nouveaux = candidats.filter((c) => c.kind === 'nouveau').length
+
+  return (
+    <div className="adm">
+      <style>{CSS}</style>
+
+      <header className="adm-header">
+        <div className="adm-header-inner">
+          <div>
+            <p className="adm-owner">INNOVÉA, Siemens Healthineers France</p>
+            <h1 className="adm-title">Administration de la veille</h1>
+          </div>
+          <a href="/" className="adm-back">Voir le dashboard</a>
+        </div>
+      </header>
+
+      <main className="adm-main">
+        <p className="adm-intro">
+          Les changements faits ici sont publiés sur le dashboard quand vous cliquez sur « Enregistrer et publier ».
+          {data.meta.lastScan && <> Dernier scan automatique le {formatDate(data.meta.lastScan, 'd MMMM yyyy')}.</>}
         </p>
 
-        {candidats.length > 0 && (
-          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '18px 20px', marginBottom: 28 }}>
-            <h2 style={{ fontSize: 15, fontWeight: 600, color: '#92400e', margin: '0 0 4px' }}>À valider ({candidats.length})</h2>
-            <p style={{ fontSize: 12, color: '#a16207', margin: '0 0 14px' }}>
-              Trouvés par le scan hebdomadaire. Rien n'apparaît sur le dashboard avant validation. Pensez à « Sauvegarder » ensuite.
-            </p>
-            {candidats.map((c) => (
-              <div key={c.id} style={{ background: 'white', border: '1px solid #fde68a', borderRadius: 8, padding: '12px 14px', marginBottom: 10 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'flex-start' }}>
+        <section aria-labelledby="queue-title">
+          <div className="adm-section-head">
+            <h2 id="queue-title">
+              À valider
+              {candidats.length > 0 && <span className="adm-count">{candidats.length}</span>}
+            </h2>
+            <p>Trouvés par le scan du lundi. Rien n'apparaît sur le dashboard avant validation.</p>
+          </div>
+
+          {candidats.length === 0 ? (
+            <div className="adm-empty">Rien à valider. Le prochain scan a lieu lundi à 6 h.</div>
+          ) : (
+            <div className="adm-queue">
+              {candidats.map((c) => (
+                <article key={c.id} className={`adm-cand${c.kind === 'modifie' ? ' is-change' : ''}`}>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>
-                      {c.kind === 'modifie' ? '✎ ' : ''}{c.nom}
+                    <div className="adm-cand-name">{c.nom}</div>
+                    <div className="adm-cand-meta">
+                      <span className="adm-niveau">{c.niveau}</span>
+                      <span>{c.organisme}</span>
+                      {c.callId && <span>{c.callId}</span>}
+                      {c.deadline ? <strong>Clôture le {formatDate(c.deadline, 'd MMMM yyyy')}</strong> : <span>Pas de date</span>}
                     </div>
-                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
-                      {c.organisme} · {c.niveau}{c.callId ? ` · ${c.callId}` : ''} · {c.deadline ? `Clôture ${c.deadline}` : 'Pas de date'}
-                    </div>
-                    {c.description && (
-                      <div style={{ fontSize: 12, color: '#374151', marginTop: 6 }}>{c.description}</div>
-                    )}
-                    <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 6 }}>
-                      {SOURCE_LABELS[c.source]} · détecté le {c.detectedAt} ·{' '}
-                      <a href={c.url} target="_blank" rel="noopener noreferrer" style={{ color: '#1d4ed8' }}>Ouvrir la source →</a>
+                    {c.description && <p className="adm-cand-desc">{c.description}</p>}
+                    <div className="adm-cand-src">
+                      {SOURCE_LABELS[c.source]}, détecté le {formatDate(c.detectedAt)}.{' '}
+                      <a href={c.url} target="_blank" rel="noopener noreferrer">Ouvrir la source</a>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0, width: 200 }}>
+                  <div className="adm-cand-actions">
                     {c.kind === 'nouveau' ? (
                       <>
+                        <label className="adm-label" htmlFor={`cible-${c.id}`}>Ajouter comme</label>
                         <select
+                          id={`cible-${c.id}`}
+                          className="adm-control"
                           value={cibleGuichet[c.id] || ''}
                           onChange={(e) => setCibleGuichet({ ...cibleGuichet, [c.id]: e.target.value })}
-                          style={{ padding: '6px 8px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 12 }}
                         >
                           <option value="">Nouveau guichet</option>
                           {guichets.map((g) => (
-                            <option key={g.id} value={g.id}>Ajouter à : {g.nom}</option>
+                            <option key={g.id} value={g.id}>Échéance de : {g.nom}</option>
                           ))}
                         </select>
-                        <button onClick={() => validerCandidat(c)} style={{ background: '#15803d', color: 'white', border: 'none', padding: '6px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-                          Valider
-                        </button>
-                        <button onClick={() => closeCandidat(c)} style={{ background: 'white', color: '#dc2626', border: '1px solid #fecaca', padding: '6px 10px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>
-                          Rejeter
-                        </button>
+                        <button type="button" className="adm-btn primary" onClick={() => validerCandidat(c)}>Valider</button>
+                        <button type="button" className="adm-btn danger" onClick={() => closeCandidat(c)}>Rejeter</button>
                       </>
                     ) : (
                       <>
                         {c.guichetId && (
-                          <button onClick={() => setEditingId(c.guichetId!)} style={{ background: 'white', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '6px 10px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>
-                            Modifier le guichet
-                          </button>
+                          <button type="button" className="adm-btn secondary" onClick={() => setEditingId(c.guichetId!)}>Modifier le guichet</button>
                         )}
-                        <button onClick={() => closeCandidat(c)} style={{ background: '#f3f4f6', color: '#374151', border: 'none', padding: '6px 10px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>
-                          Marquer comme vu
-                        </button>
+                        <button type="button" className="adm-btn secondary" onClick={() => closeCandidat(c)}>Marquer comme vu</button>
                       </>
                     )}
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {guichets.map((g) => (
-          <div key={g.id} style={{ background: 'white', borderRadius: 10, border: '1px solid #e5e7eb', marginBottom: 16, overflow: 'hidden' }}>
-            <div
-              onClick={() => setEditingId(editingId === g.id ? null : g.id)}
-              style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', borderBottom: editingId === g.id ? '1px solid #e5e7eb' : 'none' }}
-            >
-              <div>
-                <span style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>{g.nom}</span>
-                <span style={{ marginLeft: 10, fontSize: 12, color: '#6b7280' }}>{g.organisme}</span>
-              </div>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <span style={{
-                  background: g.niveau === 'FR' ? '#dbeafe' : '#fce7f3',
-                  color: g.niveau === 'FR' ? '#1e40af' : '#9d174d',
-                  padding: '2px 8px', borderRadius: 4, fontSize: 12, fontWeight: 600
-                }}>{g.niveau}</span>
-                <span style={{ fontSize: 12, color: '#9ca3af' }}>{g.deadlines.length} deadline(s)</span>
-                <span style={{ color: '#9ca3af', fontSize: 16 }}>{editingId === g.id ? '▲' : '▼'}</span>
-              </div>
+                </article>
+              ))}
             </div>
+          )}
+        </section>
 
-            {editingId === g.id && (
-              <div style={{ padding: '20px' }}>
-                <h3 style={{ fontSize: 13, color: '#6b7280', margin: '0 0 8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Aires thérapeutiques</h3>
-                <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 6 }}>
-                  {AIRES.map((a) => (
-                    <label key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#374151', cursor: 'pointer' }}>
-                      <input type="checkbox" checked={(g.aires || []).includes(a.id)} onChange={() => toggleAire(g.id, a.id)} />
-                      {a.label}
-                    </label>
-                  ))}
-                </div>
-                <p style={{ fontSize: 11, color: '#9ca3af', margin: '0 0 18px' }}>
-                  Aucune case cochée = guichet transverse, affiché pour toutes les aires.
-                </p>
-                <h3 style={{ fontSize: 13, color: '#6b7280', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Deadlines</h3>
-
-                {g.deadlines.map((dl, i) => (
-                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 140px 140px 160px auto', gap: 8, marginBottom: 10, alignItems: 'start' }}>
-                    <div>
-                      <label style={{ fontSize: 11, color: '#9ca3af', display: 'block', marginBottom: 3 }}>Label</label>
-                      <input
-                        value={dl.label}
-                        onChange={(e) => updateDeadline(g.id, i, 'label', e.target.value)}
-                        style={{ width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 13 }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: 11, color: '#9ca3af', display: 'block', marginBottom: 3 }}>Date (YYYY-MM-DD)</label>
-                      <input
-                        value={dl.date ?? ''}
-                        onChange={(e) => updateDeadline(g.id, i, 'date', e.target.value)}
-                        placeholder="2026-09-15"
-                        style={{ width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 13 }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: 11, color: '#9ca3af', display: 'block', marginBottom: 3 }}>Statut</label>
-                      <select
-                        value={dl.statut}
-                        onChange={(e) => updateDeadline(g.id, i, 'statut', e.target.value)}
-                        style={{ width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 13 }}
-                      >
-                        {STATUT_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                      {isExpired(dl) && (
-                        <span style={{ fontSize: 11, color: '#9ca3af', display: 'block', marginTop: 3 }}>Date passée : affichée « Fermé »</span>
-                      )}
-                    </div>
-                    <div>
-                      <label style={{ fontSize: 11, color: '#9ca3af', display: 'block', marginBottom: 3 }}>Notes</label>
-                      <input
-                        value={dl.notes ?? ''}
-                        onChange={(e) => updateDeadline(g.id, i, 'notes', e.target.value)}
-                        style={{ width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 13 }}
-                      />
-                    </div>
-                    <div style={{ paddingTop: 18 }}>
-                      <button
-                        onClick={() => removeDeadline(g.id, i)}
-                        style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '7px 10px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                ))}
-
-                {showAddDeadline === g.id ? (
-                  <div style={{ background: '#f9fafb', borderRadius: 8, padding: '14px', marginTop: 12, border: '1px dashed #d1d5db' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 140px 140px 160px', gap: 8, marginBottom: 10 }}>
-                      <input placeholder="Label *" value={newDeadline.label} onChange={(e) => setNewDeadline({ ...newDeadline, label: e.target.value })} style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 13 }} />
-                      <input placeholder="2026-09-15" value={newDeadline.date ?? ''} onChange={(e) => setNewDeadline({ ...newDeadline, date: e.target.value })} style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 13 }} />
-                      <select value={newDeadline.statut} onChange={(e) => setNewDeadline({ ...newDeadline, statut: e.target.value as any })} style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 13 }}>
-                        {STATUT_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                      <input placeholder="Notes (optionnel)" value={newDeadline.notes ?? ''} onChange={(e) => setNewDeadline({ ...newDeadline, notes: e.target.value })} style={{ padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: 6, fontSize: 13 }} />
-                    </div>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button onClick={() => addDeadline(g.id)} style={{ background: '#15803d', color: 'white', border: 'none', padding: '7px 16px', borderRadius: 6, fontSize: 13, fontWeight: 500 }}>Ajouter</button>
-                      <button onClick={() => setShowAddDeadline(null)} style={{ background: 'white', color: '#6b7280', border: '1px solid #e5e7eb', padding: '7px 14px', borderRadius: 6, fontSize: 13 }}>Annuler</button>
-                    </div>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => setShowAddDeadline(g.id)}
-                    style={{ marginTop: 8, background: 'white', color: '#1d4ed8', border: '1px dashed #93c5fd', padding: '7px 16px', borderRadius: 6, fontSize: 13, cursor: 'pointer' }}
-                  >
-                    + Ajouter une deadline
-                  </button>
-                )}
-
-                <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f3f4f6' }}>
-                  <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>
-                    Pour modifier le nom, l'URL ou la description du guichet, éditez directement <code>data/aap-data.json</code> sur GitHub.
-                  </p>
-                </div>
-              </div>
-            )}
+        <section aria-labelledby="guichets-title">
+          <div className="adm-section-head">
+            <h2 id="guichets-title">Guichets</h2>
+            <p>{guichets.length} suivis{nouveaux > 0 ? `, ${nouveaux} nouveau${nouveaux > 1 ? 'x' : ''} en attente ci-dessus` : ''}</p>
           </div>
-        ))}
+
+          <div className="adm-list">
+            {guichets.map((g) => {
+              const open = editingId === g.id
+              const nextDated = g.deadlines
+                .filter((d) => d.date && d.statut !== 'ferme' && !isExpired(d))
+                .map((d) => d.date!)
+                .sort()[0]
+              return (
+                <div key={g.id} className={`adm-g${open ? ' is-open' : ''}`}>
+                  <button type="button" className="adm-g-head" aria-expanded={open} onClick={() => setEditingId(open ? null : g.id)}>
+                    <div style={{ minWidth: 0 }}>
+                      <div className="adm-g-name">{g.nom}</div>
+                      <div className="adm-g-sub">
+                        <span className="adm-niveau">{g.niveau}</span>
+                        <span>{g.organisme}</span>
+                        <span>
+                          {g.deadlines.length} échéance{g.deadlines.length > 1 ? 's' : ''}
+                          {nextDated ? `, prochaine le ${formatDate(nextDated)}` : ''}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="adm-chevron" aria-hidden="true">▾</span>
+                  </button>
+
+                  {open && (
+                    <div className="adm-g-body">
+                      <div className="adm-block">
+                        <h3>Aires thérapeutiques</h3>
+                        <div className="adm-aires">
+                          {AIRES.map((a) => (
+                            <label key={a.id} className="adm-check">
+                              <input type="checkbox" checked={(g.aires || []).includes(a.id)} onChange={() => toggleAire(g.id, a.id)} />
+                              {a.label}
+                            </label>
+                          ))}
+                        </div>
+                        <p className="adm-hint">Sans case cochée, le guichet est transverse et s'affiche pour toutes les aires.</p>
+                      </div>
+
+                      <div className="adm-block">
+                        <h3>Échéances</h3>
+                        {g.deadlines.map((dl, i) => (
+                          <div key={i} className="adm-dl">
+                            <div className="adm-dl-label">
+                              <label className="adm-label" htmlFor={`l-${g.id}-${i}`}>Vague</label>
+                              <input id={`l-${g.id}-${i}`} className="adm-control" value={dl.label} onChange={(e) => updateDeadline(g.id, i, 'label', e.target.value)} />
+                            </div>
+                            <div>
+                              <label className="adm-label" htmlFor={`d-${g.id}-${i}`}>Clôture</label>
+                              <input id={`d-${g.id}-${i}`} type="date" className="adm-control" value={dl.date ?? ''} onChange={(e) => updateDeadline(g.id, i, 'date', e.target.value)} />
+                            </div>
+                            <div>
+                              <label className="adm-label" htmlFor={`s-${g.id}-${i}`}>Statut</label>
+                              <select id={`s-${g.id}-${i}`} className="adm-control" value={dl.statut} onChange={(e) => updateDeadline(g.id, i, 'statut', e.target.value)}>
+                                {STATUT_OPTIONS.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+                              </select>
+                              {isExpired(dl) && <span className="adm-expired">Date passée : affiché « Fermé »</span>}
+                            </div>
+                            <div className="adm-dl-notes">
+                              <label className="adm-label" htmlFor={`n-${g.id}-${i}`}>Notes</label>
+                              <input id={`n-${g.id}-${i}`} className="adm-control" value={dl.notes ?? ''} onChange={(e) => updateDeadline(g.id, i, 'notes', e.target.value)} />
+                            </div>
+                            <button type="button" className="adm-remove" aria-label={`Supprimer l'échéance ${dl.label}`} title="Supprimer cette échéance" onClick={() => removeDeadline(g.id, i)}>×</button>
+                          </div>
+                        ))}
+
+                        {showAddDeadline === g.id ? (
+                          <div className="adm-dl-new">
+                            <div className="adm-dl" style={{ gridTemplateColumns: 'minmax(0, 1.3fr) 150px 140px minmax(0, 1.4fr)' }}>
+                              <div className="adm-dl-label">
+                                <label className="adm-label" htmlFor={`nl-${g.id}`}>Vague (obligatoire)</label>
+                                <input id={`nl-${g.id}`} className="adm-control" value={newDeadline.label} onChange={(e) => setNewDeadline({ ...newDeadline, label: e.target.value })} autoFocus />
+                              </div>
+                              <div>
+                                <label className="adm-label" htmlFor={`nd-${g.id}`}>Clôture</label>
+                                <input id={`nd-${g.id}`} type="date" className="adm-control" value={newDeadline.date ?? ''} onChange={(e) => setNewDeadline({ ...newDeadline, date: e.target.value })} />
+                              </div>
+                              <div>
+                                <label className="adm-label" htmlFor={`ns-${g.id}`}>Statut</label>
+                                <select id={`ns-${g.id}`} className="adm-control" value={newDeadline.statut} onChange={(e) => setNewDeadline({ ...newDeadline, statut: e.target.value as Statut })}>
+                                  {STATUT_OPTIONS.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+                                </select>
+                              </div>
+                              <div className="adm-dl-notes">
+                                <label className="adm-label" htmlFor={`nn-${g.id}`}>Notes</label>
+                                <input id={`nn-${g.id}`} className="adm-control" value={newDeadline.notes ?? ''} onChange={(e) => setNewDeadline({ ...newDeadline, notes: e.target.value })} />
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: 8 }}>
+                              <button type="button" className="adm-btn primary" disabled={!newDeadline.label} onClick={() => addDeadline(g.id)}>Ajouter l'échéance</button>
+                              <button type="button" className="adm-btn secondary" onClick={() => { setShowAddDeadline(null); setNewDeadline(EMPTY_DEADLINE) }}>Annuler</button>
+                            </div>
+                          </div>
+                        ) : (
+                          <button type="button" className="adm-btn link" onClick={() => setShowAddDeadline(g.id)}>Ajouter une échéance</button>
+                        )}
+                      </div>
+
+                      <p className="adm-foot-note">
+                        Le nom, l'URL et la description se modifient dans <code>data/aap-data.json</code> sur GitHub.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      </main>
+
+      <div className="adm-bar" role="region" aria-label="Enregistrement">
+        <div className="adm-bar-inner">
+          <span className={`adm-bar-status ${barStatus.cls}`} aria-live="polite">{barStatus.text}</span>
+          <button type="button" className="adm-btn primary adm-save" onClick={saveAll} disabled={saving || !dirty}>
+            {saving ? 'Enregistrement…' : 'Enregistrer et publier'}
+          </button>
+        </div>
       </div>
     </div>
   )
