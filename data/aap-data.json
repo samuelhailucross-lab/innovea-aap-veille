@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdated": "2026-11-02",
     "updatedBy": "Admin",
-    "lastScan": "2026-11-02"
+    "lastScan": "2026-11-09"
   },
   "guichets": [
     {
@@ -622,6 +622,31 @@
       "deadline": "2027-02-17",
       "callId": "HORIZON-HLTH-2027-02-TOOL-01-two-stage",
       "description": "Appel ouvert. Call : Cluster 1 - Health (Two stage - 2027). Échéances : 2027-02-17, 2027-09-16."
+    },
+    {
+      "id": "page-bpi-tiers-lieux-2026-11-09",
+      "kind": "modifie",
+      "source": "page",
+      "detectedAt": "2026-11-09",
+      "nom": "Page modifiée : Grands Défis — Tiers lieux d'expérimentation MedTech",
+      "organisme": "Bpifrance / France 2030",
+      "niveau": "FR",
+      "url": "https://www.bpifrance.fr/nos-appels-a-projets-concours",
+      "deadline": null,
+      "guichetId": "bpi-tiers-lieux",
+      "description": "Nouveau texte sur la page : « Accueil Appels à projets et concours Tous les Appels à Projets Appels à projets 22/06/2026 au 18/11/2026 J-14 Appel à Projets France-Allemagne L’appel à projets Bpifrance / ZIM vise à promouvoir et soutenir financièremen… / Appels à projets 01/10/2026 au 01/12/2026 J-27 Innowwide : / En savoir plus Appels à projets 14/10/2026 au 04/12/2026 J-29 Prenez en charge le parcours de formation « Accélérateur Hauts-de-France 6 et 7 » à destination des Petites Entreprises (PE) La présente consultation a pour o… »"
+    },
+    {
+      "id": "lien-600ff382adb9933e",
+      "kind": "nouveau",
+      "source": "liens",
+      "detectedAt": "2026-11-09",
+      "nom": "Appels à projets (page courante)",
+      "organisme": "Agence du Numérique en Santé (ANS)",
+      "niveau": "FR",
+      "url": "https://esante.gouv.fr/lagence/appels-a-projets",
+      "deadline": null,
+      "description": "Nouveau lien apparu sur ANS — appels à projets e-santé. Ouvrir la page pour vérifier la date de clôture."
     }
   ],
   "traites": [
